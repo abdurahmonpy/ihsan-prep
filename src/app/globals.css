@@ -1,26 +1,100 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f4f5;
+  --foreground: #09090b;
+  --card-bg: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.08);
+  --sidebar-bg: #ffffff;
+  --sidebar-border: rgba(0, 0, 0, 0.08);
+  --grid-line: rgba(0, 0, 0, 0.05);
+  --text-muted: #71717a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card-bg: #09090b;
+  --card-border: rgba(255, 255, 255, 0.1);
+  --sidebar-bg: #09090b;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --grid-line: rgba(255, 255, 255, 0.03);
+  --text-muted: #a1a1aa;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 120, 0.3) transparent;
+  cursor: url('/cursor-mac.png') 0 0, auto !important;
 }
 
-body {
-  background: var(--background);
+button, a, [role="button"], input, select, textarea {
+  cursor: url('/cursor-mac.png') 0 0, pointer !important;
+}
+
+html, body {
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Subtle clean grid background that adapts to theme */
+.bg-grid {
+  background-image: 
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Lower-half luxury diagonal gold grid overlay */
+.gold-grid-overlay-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  /* Slanted diagonal fade mask at ~170deg (higher on the right, lower on the left by ~10deg) */
+  -webkit-mask-image: linear-gradient(170deg, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.4) 55%, black 75%, black 100%);
+  mask-image: linear-gradient(170deg, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.4) 55%, black 75%, black 100%);
+}
+
+.gold-grid-overlay-lines {
+  width: 100%;
+  height: 100%;
+  /* Smooth luxury gold gradient: pale gold -> medium gold -> rich metallic gold */
+  background: linear-gradient(
+    170deg,
+    transparent 0%,
+    rgba(246, 235, 200, 0.25) 38%,
+    rgba(246, 235, 200, 0.75) 45%,
+    #EAD596 55%,
+    #E0B84A 70%,
+    #D4AF37 84%,
+    #B8860B 100%
+  );
+  /* 32px x 32px Grid line mask: aligns 1:1 pixel-perfect with base grid lines */
+  -webkit-mask-image: 
+    linear-gradient(to right, black 1px, transparent 1px),
+    linear-gradient(to bottom, black 1px, transparent 1px);
+  -webkit-mask-size: 32px 32px;
+  -webkit-mask-repeat: repeat;
+  mask-image: 
+    linear-gradient(to right, black 1px, transparent 1px),
+    linear-gradient(to bottom, black 1px, transparent 1px);
+  mask-size: 32px 32px;
+  mask-repeat: repeat;
+}
+
+/* Noise texture overlay */
+.noise-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
