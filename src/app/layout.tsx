@@ -11,13 +11,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Ihsan Prep — Dashboard",
-  description: "Modern Digital SAT Study Platform",
+  title: "OnePrep — SAT, ACT & AP Prep and College Application Help",
+  description: "Your All-in-One Resource for SAT, ACT, AP, and College",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased dark`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col noise-overlay transition-colors duration-300">
         <ThemeProvider>
           <SidebarProvider>{children}</SidebarProvider>
