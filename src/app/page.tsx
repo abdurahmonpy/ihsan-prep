@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Check,
+  ChevronDown,
   ChevronRight,
   Sparkles,
   HelpCircle,
@@ -17,6 +18,20 @@ import {
   Zap,
   Clock,
   LayoutDashboard,
+  Calendar,
+  Play,
+  Volume2,
+  Maximize2,
+  TrendingUp,
+  BarChart3,
+  Flame,
+  Award,
+  Layers,
+  FileText,
+  Search,
+  CheckCircle2,
+  Compass,
+  GraduationCap
 } from "lucide-react";
 
 // OnePrep Cute Cloud Mascot Logo
@@ -61,8 +76,143 @@ function HandDrawnUnderline({ className = "w-48" }: { className?: string }) {
 }
 
 export default function LandingPage() {
-  const [selectedAnswer, setSelectedAnswer] = useState<string>("C");
-  const [activeSubject, setActiveSubject] = useState<"rw" | "math">("rw");
+  // Hero question state
+  const [heroOption, setHeroOption] = useState<string>("C");
+  const [heroAnswerChecked, setHeroAnswerChecked] = useState<boolean>(true);
+
+  // Question bank state
+  const [qbSubject, setQbSubject] = useState<"rw" | "math">("rw");
+  const [qbOption, setQbOption] = useState<string>("A");
+
+  // Masterclass state
+  const [masterclassTab, setMasterclassTab] = useState<"rw" | "math">("rw");
+
+  // Selected feature in 15+ carousel
+  const [activeFeature, setActiveFeature] = useState<number>(0);
+
+  // FAQ open states
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const testimonialsList = [
+  {
+    "name": "Atri A.",
+    "fromScore": "1340",
+    "toScore": "1490",
+    "diff": "+150 points",
+    "color": "#E8AE3D",
+    "quote": "Oneprep was helpful during my intense SAT prep, especially with a short timeline. Interface is super user-friendly and Preppy keeps every question engaging."
+  },
+  {
+    "name": "Bennett G.",
+    "fromScore": "1430",
+    "toScore": "1550",
+    "diff": "+120 points",
+    "color": "#32C992",
+    "quote": "The cleanest SAT prep interface I've used. The questions feel comparable to official tests, and the analytics showed me exactly where to focus each week."
+  },
+  {
+    "name": "Sameera S.",
+    "fromScore": "1120",
+    "toScore": "1370",
+    "diff": "+250 points",
+    "color": "#E8AE3D",
+    "quote": "OnePrep helped me more than I expected. Preppy AI is genuinely useful when I'm stuck because it explains the reasoning instead of simply giving me the answer."
+  },
+  {
+    "name": "Chris A.",
+    "fromScore": "1190",
+    "toScore": "1470",
+    "diff": "+280 points",
+    "color": "#32C992",
+    "quote": "Honestly didn't think an AI tutor would be that helpful, but it actually explains stuff like a person would. A bunch of math I'd been guessing on for ages finally made sense."
+  },
+  {
+    "name": "Chase D.",
+    "fromScore": "1200",
+    "toScore": "1520",
+    "diff": "+320 points",
+    "color": "#DE53B4",
+    "quote": "Adaptive practice helped me focus on exactly what I kept missing. After two months, I stopped repeating the same mistakes and my mock scores started jumping every week."
+  },
+  {
+    "name": "Henry S.",
+    "fromScore": "1300",
+    "toScore": "1450",
+    "diff": "+150 points",
+    "color": "#DE53B4",
+    "quote": "The practice tests feel accurate, even slightly harder than the official ones. The pacing practice made test day much less stressful."
+  },
+  {
+    "name": "Mai H.",
+    "fromScore": "1300",
+    "toScore": "1550",
+    "diff": "+250 points",
+    "color": "#DE53B4",
+    "quote": "I like that the explanations actually make sense. Some other platforms just give you the answer but this one breaks it down."
+  },
+  {
+    "name": "Mahmoud T.",
+    "fromScore": "1240",
+    "toScore": "1510",
+    "diff": "+270 points",
+    "color": "#DE53B4",
+    "quote": "The explanations are detailed and helped me finally understand the reading concepts I'd struggled with for weeks."
+  },
+  {
+    "name": "Mattias M.",
+    "fromScore": "1220",
+    "toScore": "1370",
+    "diff": "+150 points",
+    "color": "#32C992",
+    "quote": "OnePrep puts every question bank in one place and organizes everything by topic, so studying finally feels structured."
+  }
+];
+
+  const faqItems = [
+    {
+      q: "Is OnePrep free to use?",
+      a: "Yes! You can get started completely for free without entering a credit card. Free accounts give you full access to diagnostic assessments, a curated set of practice questions, and basic performance analytics."
+    },
+    {
+      q: "What makes OnePrep different from other SAT prep?",
+      a: "Unlike traditional static question banks, OnePrep combines authentic adaptive tests, real-time interactive Socratic guidance with Preppy AI, video walkthroughs from a 1580 scorer, and automated study schedules that adapt to your weaknesses."
+    },
+    {
+      q: "How accurate is the score prediction?",
+      a: "Our score prediction engine is calibrated against tens of thousands of official College Board Digital SAT exams. Most students see their official score fall within ±30 points of their predicted score on OnePrep."
+    },
+    {
+      q: "How does Preppy AI work?",
+      a: "Preppy is an intelligent tutor built directly into every question. Instead of simply giving away the final answer, Preppy identifies your conceptual misconception, provides tailored hints, and guides you step-by-step through the problem."
+    },
+    {
+      q: "Which exams does OnePrep cover?",
+      a: "OnePrep currently offers complete preparation for the Digital SAT, Enhanced ACT, AP exams (including Calculus AB/BC, Chemistry, US History, and Biology), plus college admissions guidance."
+    },
+    {
+      q: "Can OnePrep help with my college applications?",
+      a: "Yes. With our College track, students can explore university admission stats, track application deadlines, organize supplemental essays, and receive personalized feedback on their personal statement drafts."
+    },
+    {
+      q: "Can I use OnePrep on my phone?",
+      a: "Yes, OnePrep is fully mobile-responsive and works seamlessly on iOS, Android, tablets, and desktop browsers. You can practice questions on the go whenever you have a few minutes."
+    }
+  ];
+
+  const featuresList = [
+    { name: "Lessons", desc: "Short, high-yield lessons covering every skill on the test.", icon: "📚", color: "bg-amber-50 text-amber-600 border-amber-200" },
+    { name: "Question Bank", desc: "4,000+ realistic questions with thorough explanations.", icon: "❓", color: "bg-purple-50 text-purple-600 border-purple-200" },
+    { name: "Question Rush", desc: "Race against the clock to build rapid recall and pacing.", icon: "⚡", color: "bg-blue-50 text-blue-600 border-blue-200" },
+    { name: "Challenge Questions", desc: "Toughest 99th percentile problems to secure an 800.", icon: "🎯", color: "bg-rose-50 text-rose-600 border-rose-200" },
+    { name: "Preppy AI Tutor", desc: "Instant conversational hints without spoiling the final answer.", icon: "🤖", color: "bg-sky-50 text-sky-600 border-sky-200" },
+    { name: "Study Planner", desc: "Auto-recalibrating schedule syncing with Google Calendar.", icon: "📅", color: "bg-emerald-50 text-emerald-600 border-emerald-200" },
+    { name: "Full-Length Mocks", desc: "True adaptive multi-stage test simulations with Bluebook scoring.", icon: "⏱️", color: "bg-teal-50 text-teal-600 border-teal-200" },
+    { name: "Desmos Walkthroughs", desc: "Master every Desmos graphing shortcut for digital Math.", icon: "📈", color: "bg-indigo-50 text-indigo-600 border-indigo-200" },
+    { name: "Mistake Notebook", desc: "Every missed problem auto-categorized for spaced repetition.", icon: "📓", color: "bg-orange-50 text-orange-600 border-orange-200" },
+    { name: "Vocab Builder", desc: "Contextual vocabulary drills for High-Frequency SAT words.", icon: "🔤", color: "bg-pink-50 text-pink-600 border-pink-200" },
+    { name: "Pacing Analytics", desc: "Identify exact seconds lost per question difficulty band.", icon: "📊", color: "bg-cyan-50 text-cyan-600 border-cyan-200" },
+    { name: "College List", desc: "Compare target scores, acceptance rates, and GPA requirements.", icon: "🏛️", color: "bg-slate-50 text-slate-600 border-slate-200" }
+  ];
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-[#38bdf8] selection:text-white">
@@ -97,7 +247,7 @@ export default function LandingPage() {
                 New
               </span>
             </div>
-            <Link href="#pricing" className="hover:text-zinc-900 transition-colors">
+            <Link href="#planner" className="hover:text-zinc-900 transition-colors">
               For Schools
             </Link>
             <Link href="#pricing" className="hover:text-zinc-900 transition-colors">
@@ -124,131 +274,135 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* ---------------- 2. HERO SECTION ---------------- */}
-      <section className="relative pt-12 pb-24 overflow-hidden">
-        {/* Soft atmospheric gradient */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-gradient-to-bl from-[#e0f7fa]/60 via-[#e8f6fd]/40 to-transparent blur-3xl -z-10" />
+      {/* ---------------- 2. HERO SECTION (User Snippet with Animation & Cyan Ribbon) ---------------- */}
+      <section className="relative overflow-hidden pt-6 pb-20 lg:pt-12 lg:pb-28">
+        <div className="max-w-7xl mx-auto px-6 grid min-h-[640px] items-center gap-14 lg:min-h-[700px] lg:grid-cols-[minmax(0,1.1fr)_minmax(24rem,0.9fr)] lg:gap-12">
+          {/* Left Text Column */}
+          <div className="order-last -mt-8 w-full max-w-4xl lg:order-first lg:mt-0">
+            <div className="flex flex-col items-center gap-7 text-center lg:items-start lg:text-left">
+              <h1 className="text-balance text-4xl leading-[1.1] tracking-[-0.045em] sm:text-5xl md:text-5xl lg:text-6xl text-zinc-950 font-black">
+                Your{" "}
+                <span className="relative inline-block whitespace-nowrap">
+                  All-in-One
+                  <svg
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -bottom-[0.06em] left-0 h-[0.22em] w-full overflow-visible text-[#38BDF8]"
+                    preserveAspectRatio="none"
+                    viewBox="0 0 100 12"
+                  >
+                    <path d="M 3 9 Q 50 2 97 9" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="5" />
+                  </svg>
+                </span>
+                <br />
+                Resource for
+                <br />
+                SAT, ACT, AP, and College
+              </h1>
 
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Text & CTA */}
-          <div className="lg:col-span-6 space-y-6">
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-zinc-950 leading-[1.12]">
-              Your{" "}
-              <span className="relative inline-block">
-                All–in–One
-                <HandDrawnUnderline className="absolute -bottom-2 left-0 w-full" />
-              </span>{" "}
-              Resource for SAT, ACT, AP, and College
-            </h1>
+              <p className="text-balance text-xl leading-snug tracking-tight sm:text-2xl text-zinc-600 font-sans font-normal max-w-xl">
+                Prepare for your exams with expert-written questions and realistic practice tests. Strengthen your college application with essay feedback and application reviews.
+              </p>
 
-            <p className="text-lg sm:text-xl text-zinc-600 font-medium leading-relaxed max-w-xl">
-              Prepare for your exams with expert-written questions and realistic practice tests. Strengthen your college application with essay feedback and application reviews.
-            </p>
+              <div className="flex w-full flex-wrap items-center justify-center gap-4 lg:justify-start pt-2">
+                <Link
+                  href="/dashboard"
+                  className="inline-flex shrink-0 cursor-pointer items-center justify-center whitespace-nowrap font-bold transition-all rounded-full bg-black hover:bg-zinc-800 text-white h-13 px-8 text-lg shadow-lg active:scale-95"
+                >
+                  Get Started for Free
+                </Link>
+                <button className="inline-flex shrink-0 cursor-pointer items-center justify-center whitespace-nowrap font-semibold transition-all border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 h-13 px-6 text-base rounded-full shadow-xs">
+                  I&apos;m a parent
+                </button>
+                <button className="inline-flex shrink-0 cursor-pointer items-center justify-center whitespace-nowrap font-semibold transition-all border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 h-13 px-6 text-base rounded-full shadow-xs">
+                  I&apos;m an educator
+                </button>
+              </div>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href="/dashboard"
-                className="rounded-full bg-black hover:bg-zinc-800 text-white px-8 py-4 text-base font-bold shadow-lg transition-all active:scale-95 flex items-center gap-2"
-              >
-                <span>Get Started for Free</span>
-              </Link>
-              <button className="rounded-full bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-300 px-6 py-4 text-base font-bold shadow-xs transition-all">
-                I&apos;m a parent
-              </button>
-              <button className="rounded-full bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-300 px-6 py-4 text-base font-bold shadow-xs transition-all">
-                I&apos;m an educator
-              </button>
-            </div>
-
-            {/* Direct Dashboard Shortcut */}
-            <div className="pt-2 flex items-center gap-2 text-xs font-bold text-zinc-500">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Platformani ko&apos;rish uchun:</span>
-              <Link href="/dashboard" className="text-[#0284c7] underline hover:text-[#0369a1]">
-                Dashboardga o&apos;tish →
-              </Link>
+              {/* Direct Dashboard Link */}
+              <div className="pt-2 flex items-center gap-2 text-xs font-bold text-zinc-500">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>OnePrep Dashboard tizimiga kirish:</span>
+                <Link href="/dashboard" className="text-[#0284c7] font-extrabold underline hover:text-[#0369a1]">
+                  Platforma Dashboardi →
+                </Link>
+              </div>
             </div>
           </div>
 
-          {/* Right: Floating Digital SAT Mockup Card with Playful Cyan Brush */}
-          <div className="lg:col-span-6 relative flex items-center justify-center">
-            {/* Playful Cyan Brush Stroke behind the Card */}
-            <div className="absolute -inset-4 w-[110%] h-[110%] -z-10 pointer-events-none flex items-center justify-center">
-              <svg viewBox="0 0 500 500" className="w-full h-full opacity-85">
+          {/* Right Column: Animated Card + Cyan Painterly Ribbon */}
+          <div className="relative flex w-full justify-center">
+            {/* The Vibrant Cyan Brush Stroke Behind */}
+            <div className="pointer-events-none absolute -inset-10 sm:-inset-16 flex items-center justify-center -z-10">
+              <svg viewBox="0 0 540 560" className="w-[125%] h-[125%] max-w-none opacity-90 drop-shadow-md">
                 <path
-                  d="M100 220 Q 250 80, 420 180 T 360 340 Q 200 460, 120 360 C 80 300, 70 240, 100 220 Z"
-                  fill="#7dd3fc"
-                  className="blur-xs"
-                />
-                {/* Hand drawn loop ribbon */}
-                <path
-                  d="M420 180 C 470 230, 400 360, 360 340 C 260 300, 120 400, 380 300"
-                  stroke="#38bdf8"
-                  strokeWidth="60"
-                  strokeLinecap="round"
+                  d="M 380 90 C 490 120, 520 220, 440 280 C 350 350, 200 240, 160 360 C 130 450, 240 520, 390 480 C 450 460, 470 410, 430 380"
                   fill="none"
-                  opacity="0.9"
+                  stroke="#38BDF8"
+                  strokeWidth="90"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  opacity="0.85"
                 />
               </svg>
             </div>
 
-            {/* The Floating Interactive SAT Card */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative w-full max-w-md bg-white rounded-3xl border border-zinc-200/80 p-6 sm:p-7 shadow-2xl backdrop-blur-xl"
-            >
-              {/* Header inside mockup */}
-              <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
-                <span className="text-xs font-black uppercase tracking-wider text-zinc-400">
+            {/* Interactive Digital SAT Card Preview */}
+            <div className="relative w-full max-w-[420px] rounded-3xl bg-white/95 border border-zinc-200 shadow-2xl p-6 backdrop-blur-md">
+              {/* Header Bar */}
+              <div className="flex items-center justify-between pb-3.5 border-b border-zinc-100">
+                <div className="flex items-center gap-2">
+                  <span className="h-7 w-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center text-xs font-black">
+                    8
+                  </span>
+                  <span className="text-xs font-bold text-zinc-500 flex items-center gap-1.5">
+                    <Star className="h-3.5 w-3.5 text-zinc-400" />
+                    Mark for Review
+                  </span>
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider text-sky-600 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-100">
                   Digital SAT
                 </span>
-                <span className="text-xs text-zinc-400 font-semibold">
-                  8 of 27 · Mark for Review
-                </span>
               </div>
 
-              {/* Score pill */}
-              <div className="flex items-baseline gap-2 mt-4">
-                <span className="text-3xl font-black text-zinc-950">1570</span>
-                <span className="rounded-full bg-emerald-50 text-emerald-600 text-xs font-black px-2.5 py-0.5 border border-emerald-200">
+              {/* Floating Predicted Score Badge */}
+              <div className="mt-4 p-3.5 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 text-white flex items-center justify-between shadow-lg">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Predicted Score</p>
+                  <p className="text-2xl font-black text-white">1570</p>
+                </div>
+                <div className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 text-xs font-black">
                   +180 points
-                </span>
+                </div>
               </div>
-              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mt-0.5">
-                Predicted SAT Score
-              </p>
 
-              {/* Question */}
-              <div className="mt-5 p-4 rounded-2xl bg-zinc-50 border border-zinc-100 text-sm font-semibold text-zinc-800 leading-relaxed">
+              {/* Question Text */}
+              <div className="mt-4 p-3.5 rounded-xl bg-zinc-50 border border-zinc-100 font-serif text-sm leading-relaxed text-zinc-800">
                 A line in the <em>xy</em>-plane passes through (0, 4) and (2, 10). What is the slope of the line?
               </div>
 
               {/* Options */}
-              <div className="mt-4 space-y-2.5">
+              <div className="mt-3.5 space-y-2">
                 {[
-                  { label: "A", val: "2" },
-                  { label: "B", val: "4" },
-                  { label: "C", val: "3", isCorrect: true },
-                  { label: "D", val: "7" },
+                  { key: "A", val: "2" },
+                  { key: "B", val: "4" },
+                  { key: "C", val: "3", correct: true },
+                  { key: "D", val: "7" }
                 ].map((opt) => (
                   <button
-                    key={opt.label}
-                    onClick={() => setSelectedAnswer(opt.label)}
-                    className={`w-full flex items-center gap-3 p-3 rounded-xl border text-sm font-bold text-left transition-all ${
-                      selectedAnswer === opt.label
-                        ? "border-[#0284c7] bg-[#f0f9ff] text-[#0284c7] shadow-xs ring-1 ring-[#0284c7]"
-                        : "border-zinc-200 hover:border-zinc-300 bg-white text-zinc-800"
+                    key={opt.key}
+                    onClick={() => setHeroOption(opt.key)}
+                    className={`w-full flex items-center gap-3 p-2.5 rounded-xl border text-sm font-bold text-left transition-all ${
+                      heroOption === opt.key
+                        ? "border-[#0284c7] bg-sky-50/70 text-[#0284c7] ring-1 ring-[#0284c7]"
+                        : "border-zinc-200 bg-white hover:border-zinc-300 text-zinc-800"
                     }`}
                   >
                     <span
                       className={`h-6 w-6 rounded-lg flex items-center justify-center text-xs font-black ${
-                        selectedAnswer === opt.label ? "bg-[#0284c7] text-white" : "bg-zinc-100 text-zinc-600"
+                        heroOption === opt.key ? "bg-[#0284c7] text-white" : "bg-zinc-100 text-zinc-600"
                       }`}
                     >
-                      {opt.label}
+                      {opt.key}
                     </span>
                     <span>{opt.val}</span>
                   </button>
@@ -256,23 +410,26 @@ export default function LandingPage() {
               </div>
 
               {/* Check Answer Button */}
-              <button className="w-full mt-5 rounded-xl bg-zinc-900 hover:bg-black text-white font-bold py-3 text-sm transition-all shadow-sm">
-                Check Answer
+              <button
+                onClick={() => setHeroAnswerChecked(!heroAnswerChecked)}
+                className="w-full mt-4 rounded-xl bg-zinc-950 hover:bg-black text-white font-bold py-3 text-sm transition-all shadow-md flex items-center justify-center gap-2 active:scale-98"
+              >
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                <span>{heroAnswerChecked ? "Correct! Slope = 3" : "Check Answer"}</span>
               </button>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------- 3. UNIVERSITIES TRUST BANNER (Screenshot 1) ---------------- */}
-      <section className="bg-[#0E4363] text-white py-16">
+      {/* ---------------- 3. UNIVERSITIES TRUST BANNER ---------------- */}
+      <section className="bg-[#0E4363] text-white py-14">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white mb-10">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white mb-8">
             OnePrep helps students get into top schools
           </h2>
 
-          {/* Grid of Universities */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 items-center justify-center">
             {[
               "Stanford University",
               "MIT",
@@ -298,7 +455,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ---------------- 4. DIAGNOSE, PLAN, & PRACTICE SMARTER (Screenshot 3) ---------------- */}
+      {/* ---------------- 4. DIAGNOSE, PLAN, & PRACTICE SMARTER ---------------- */}
       <section className="py-24 bg-[#FAFCFD]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -311,11 +468,9 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          {/* 3 Step Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Step 01 */}
             <div className="rounded-3xl bg-white border border-zinc-200/80 p-7 shadow-lg flex flex-col justify-between hover:shadow-xl transition-all">
-              {/* Visual Card 1 */}
               <div className="rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] p-5 mb-8">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Predicted Score</p>
                 <p className="text-4xl font-black text-zinc-900 mt-1">1420</p>
@@ -368,7 +523,6 @@ export default function LandingPage() {
 
             {/* Step 02 */}
             <div className="rounded-3xl bg-white border border-zinc-200/80 p-7 shadow-lg flex flex-col justify-between hover:shadow-xl transition-all">
-              {/* Visual Card 2 */}
               <div className="rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] p-5 mb-8 space-y-3">
                 <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-zinc-200 shadow-2xs">
                   <div>
@@ -378,7 +532,7 @@ export default function LandingPage() {
                       <span className="text-[10px] text-zinc-400">⏱ 30m</span>
                     </div>
                   </div>
-                  <span className="text-xs font-bold text-[#0284c7] hover:underline cursor-pointer">Start &gt;</span>
+                  <Link href="/dashboard" className="text-xs font-bold text-[#0284c7] hover:underline">Start &gt;</Link>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-zinc-200 shadow-2xs">
@@ -389,7 +543,7 @@ export default function LandingPage() {
                       <span className="text-[10px] text-zinc-400">⏱ 25m</span>
                     </div>
                   </div>
-                  <span className="text-xs font-bold text-[#0284c7] hover:underline cursor-pointer">Start &gt;</span>
+                  <Link href="/dashboard" className="text-xs font-bold text-[#0284c7] hover:underline">Start &gt;</Link>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-zinc-200 shadow-2xs">
@@ -397,7 +551,7 @@ export default function LandingPage() {
                     <p className="text-xs font-bold text-zinc-900">Vocab</p>
                     <p className="text-[10px] text-zinc-400 mt-0.5">⏱ 15m</p>
                   </div>
-                  <span className="text-xs font-bold text-[#0284c7] hover:underline cursor-pointer">Start &gt;</span>
+                  <Link href="/dashboard" className="text-xs font-bold text-[#0284c7] hover:underline">Start &gt;</Link>
                 </div>
               </div>
 
@@ -412,16 +566,15 @@ export default function LandingPage() {
 
             {/* Step 03 */}
             <div className="rounded-3xl bg-white border border-zinc-200/80 p-7 shadow-lg flex flex-col justify-between hover:shadow-xl transition-all">
-              {/* Visual Card 3 */}
               <div className="rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] p-5 mb-8 space-y-3">
                 <div className="p-3.5 rounded-xl bg-white border border-zinc-200 shadow-2xs">
                   <p className="text-xs font-bold text-zinc-900">Question bank</p>
                   <p className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">
                     Work through questions at your own pace with full explanations.
                   </p>
-                  <button className="mt-2 text-xs font-bold text-[#0284c7] hover:underline">
+                  <Link href="/dashboard" className="mt-2 inline-block text-xs font-bold text-[#0284c7] hover:underline">
                     Continue
-                  </button>
+                  </Link>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-white border border-zinc-200 shadow-2xs">
@@ -429,9 +582,9 @@ export default function LandingPage() {
                   <p className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">
                     Race against the clock to practice your speed.
                   </p>
-                  <button className="mt-2 text-xs font-bold text-[#0284c7] hover:underline">
+                  <Link href="/dashboard" className="mt-2 inline-block text-xs font-bold text-[#0284c7] hover:underline">
                     Continue
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -447,10 +600,46 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ---------------- 5. QUESTION BANK WITH ASK PREPPY AI (Screenshot 5) ---------------- */}
+      {/* ---------------- 5. TESTIMONIAL ABID ---------------- */}
+      <section className="py-24 bg-gradient-to-b from-[#E3F5FC] via-[#EDF9FE] to-white relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
+            Achieve a{" "}
+            <span className="relative inline-block">
+              life-changing
+              <HandDrawnUnderline className="absolute -bottom-2 left-0 w-full" />
+            </span>{" "}
+            score
+          </h2>
+
+          <div className="relative">
+            <blockquote className="text-xl sm:text-2xl font-bold text-zinc-800 leading-relaxed font-serif">
+              “OnePrep stands out for its high-quality practice questions and detailed video explanations. I&apos;m using OnePrep Pro to work toward my target SAT score of 1550.”
+            </blockquote>
+
+            <div className="mt-8 flex flex-col items-center justify-center gap-2">
+              <div className="h-14 w-14 rounded-full bg-cyan-200 ring-4 ring-white shadow-md flex items-center justify-center font-bold text-cyan-900 text-2xl">
+                👨‍🎓
+              </div>
+              <div className="text-center">
+                <p className="font-extrabold text-zinc-900 text-lg">Abid</p>
+                <p className="text-sm text-zinc-500 font-medium">Dream school: Stanford University</p>
+              </div>
+            </div>
+
+            {/* Pagination Dots */}
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <span className="h-2 w-2 rounded-full bg-zinc-300" />
+              <span className="h-2 w-6 rounded-full bg-[#0284c7]" />
+              <span className="h-2 w-2 rounded-full bg-zinc-300" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 6. QUESTION BANK WITH ASK PREPPY AI ---------------- */}
       <section className="py-24 bg-white border-t border-zinc-100">
         <div className="max-w-7xl mx-auto px-6">
-          {/* Header */}
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-700 font-black text-xs px-3.5 py-1 mb-4 border border-purple-200">
               <span className="h-4 w-4 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px]">?</span>
@@ -465,7 +654,7 @@ export default function LandingPage() {
             <div className="pt-4">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all"
+                className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all active:scale-95"
               >
                 <span>Get started for free</span>
                 <ArrowRight className="h-4 w-4" />
@@ -475,12 +664,11 @@ export default function LandingPage() {
 
           {/* Practice Interface Mockup with Floating AI Tutor */}
           <div className="mt-12 rounded-3xl border border-zinc-200 bg-[#FAFAFA] p-6 sm:p-8 shadow-xl relative overflow-hidden">
-            {/* Subject selector tab inside */}
             <div className="flex items-center gap-3 mb-6">
               <button
-                onClick={() => setActiveSubject("rw")}
+                onClick={() => setQbSubject("rw")}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all ${
-                  activeSubject === "rw"
+                  qbSubject === "rw"
                     ? "bg-black text-white"
                     : "bg-white text-zinc-600 border border-zinc-200 hover:text-black"
                 }`}
@@ -489,9 +677,9 @@ export default function LandingPage() {
                 Reading & Writing
               </button>
               <button
-                onClick={() => setActiveSubject("math")}
+                onClick={() => setQbSubject("math")}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all ${
-                  activeSubject === "math"
+                  qbSubject === "math"
                     ? "bg-black text-white"
                     : "bg-white text-zinc-600 border border-zinc-200 hover:text-black"
                 }`}
@@ -501,7 +689,6 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* Split Screen Practice View */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: Passage */}
               <div className="lg:col-span-6 bg-white p-6 rounded-2xl border border-zinc-200 text-xs text-zinc-700 leading-relaxed font-serif space-y-3">
@@ -531,25 +718,42 @@ export default function LandingPage() {
                   </p>
 
                   <div className="space-y-2 pt-2">
-                    <div className="p-3 rounded-xl border border-rose-300 bg-rose-50/70 text-xs text-rose-900 font-medium flex items-center gap-2">
+                    <button
+                      onClick={() => setQbOption("A")}
+                      className={`w-full text-left p-3 rounded-xl border text-xs transition-all flex items-center gap-2 ${
+                        qbOption === "A"
+                          ? "border-rose-400 bg-rose-50 text-rose-900 font-medium"
+                          : "border-zinc-200 bg-white text-zinc-800"
+                      }`}
+                    >
                       <span className="h-5 w-5 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-[10px]">✕</span>
                       <span>By explaining that both singing and movement are important to Saturday Night Fever</span>
-                    </div>
-                    <div className="p-3 rounded-xl border border-zinc-200 bg-white text-xs text-zinc-800 font-medium">
+                    </button>
+                    <button
+                      onClick={() => setQbOption("B")}
+                      className={`w-full text-left p-3 rounded-xl border text-xs transition-all ${
+                        qbOption === "B"
+                          ? "border-[#0284c7] bg-sky-50 text-[#0284c7] font-bold"
+                          : "border-zinc-200 bg-white text-zinc-800"
+                      }`}
+                    >
                       By noting that bands other than the Bee Gees contributed songs to Saturday Night Fever
-                    </div>
-                    <div className="p-3 rounded-xl border border-zinc-200 bg-white text-xs text-zinc-800 font-medium">
+                    </button>
+                    <button
+                      onClick={() => setQbOption("C")}
+                      className={`w-full text-left p-3 rounded-xl border text-xs transition-all ${
+                        qbOption === "C"
+                          ? "border-[#0284c7] bg-sky-50 text-[#0284c7] font-bold"
+                          : "border-zinc-200 bg-white text-zinc-800"
+                      }`}
+                    >
                       By questioning the status of Saturday Night Fever as a classic film
-                    </div>
+                    </button>
                   </div>
                 </div>
 
                 {/* Floating "Ask Preppy" AI Chatbot Card */}
-                <motion.div
-                  initial={{ scale: 0.95 }}
-                  animate={{ scale: 1 }}
-                  className="rounded-2xl border border-[#BAE6FD] bg-white p-4 shadow-xl space-y-3"
-                >
+                <div className="rounded-2xl border border-[#BAE6FD] bg-white p-4 shadow-xl space-y-3">
                   <div className="flex items-center gap-2.5">
                     <CloudMascot size={28} />
                     <div>
@@ -561,92 +765,804 @@ export default function LandingPage() {
                     <input
                       type="text"
                       readOnly
-                      value="Can you walk me through this and..."
-                      className="text-xs text-zinc-700 bg-transparent flex-1 outline-hidden"
+                      value="Can you walk me through this question step-by-step?"
+                      className="text-xs text-zinc-700 bg-transparent flex-1 outline-none"
                     />
-                    <button className="h-6 w-6 rounded-lg bg-black text-white flex items-center justify-center shrink-0">
-                      <Send className="h-3 w-3" />
-                    </button>
+                    <Link
+                      href="/dashboard"
+                      className="h-7 w-7 rounded-lg bg-black text-white flex items-center justify-center shrink-0 hover:bg-zinc-800"
+                    >
+                      <Send className="h-3.5 w-3.5" />
+                    </Link>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------- 6. TESTIMONIAL (Screenshot 4) ---------------- */}
-      <section className="py-24 bg-gradient-to-b from-[#E3F5FC] via-[#EDF9FE] to-white relative overflow-hidden">
-        {/* Soft Cloud Shapes Background */}
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
+      {/* ---------------- 7. STUDY PLANNER SECTION ---------------- */}
+      <section id="planner" className="py-24 bg-[#FAFCFD]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-2xl mb-12">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-700 font-black text-xs px-3.5 py-1 mb-4 border border-blue-200">
+              <Calendar className="h-3.5 w-3.5" />
+              Study Planner
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950 leading-tight">
+              Stop wondering what to study next
+            </h2>
+            <p className="text-base sm:text-lg text-zinc-600 font-medium mt-3 leading-relaxed">
+              Each week&apos;s schedule is built from your test date and latest activity. The plan recalibrates as your accuracy changes.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all active:scale-95"
+              >
+                <span>Get started for free</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left Card: Your week at a glance */}
+            <div className="lg:col-span-7 rounded-3xl bg-white border border-zinc-200 p-6 sm:p-8 shadow-xl space-y-6">
+              <div className="border-b border-zinc-100 pb-4">
+                <h3 className="text-xl font-black text-zinc-950">Your week at a glance</h3>
+                <p className="text-xs sm:text-sm text-zinc-500 font-medium mt-1">
+                  See what to work on each day, how long it takes, and where to start when you sit down.
+                </p>
+              </div>
+
+              {/* Day Tasks */}
+              <div className="space-y-6">
+                {/* Thu 21 May */}
+                <div className="flex gap-4">
+                  <div className="w-12 text-center shrink-0">
+                    <p className="text-[10px] font-bold uppercase text-zinc-400">Thu</p>
+                    <p className="text-2xl font-black text-zinc-900">21</p>
+                    <p className="text-[10px] font-bold text-zinc-400">May</p>
+                  </div>
+                  <div className="flex-1 space-y-2.5">
+                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
+                        <div>
+                          <p className="text-xs font-bold text-zinc-900">Reading synthesis drill</p>
+                          <p className="text-[10px] text-zinc-400">Reading / 30 min / 10 questions</p>
+                        </div>
+                      </div>
+                      <Link href="/dashboard" className="text-xs font-bold text-[#0284c7] hover:underline">Start &gt;</Link>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200">
+                      <div className="flex items-center gap-3">
+                        <div className="h-5 w-5 rounded-full border-2 border-zinc-300 shrink-0" />
+                        <div>
+                          <p className="text-xs font-bold text-zinc-900">Expression of ideas review</p>
+                          <p className="text-[10px] text-zinc-400">Writing / 20 min / 5 questions</p>
+                        </div>
+                      </div>
+                      <Link href="/dashboard" className="text-xs font-bold text-[#0284c7] hover:underline">Start &gt;</Link>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sat 23 May */}
+                <div className="flex gap-4">
+                  <div className="w-12 text-center shrink-0">
+                    <p className="text-[10px] font-bold uppercase text-zinc-400">Sat</p>
+                    <p className="text-2xl font-black text-zinc-900">23</p>
+                    <p className="text-[10px] font-bold text-zinc-400">May</p>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-sky-50 border border-sky-200">
+                      <div className="flex items-center gap-3">
+                        <div className="h-5 w-5 rounded-full border-2 border-sky-400 shrink-0" />
+                        <div>
+                          <p className="text-xs font-bold text-sky-950">Cross-topic practice set</p>
+                          <p className="text-[10px] text-sky-600 font-medium">Mixed / 45 min / 20 questions</p>
+                        </div>
+                      </div>
+                      <Link href="/dashboard" className="px-4 py-1.5 rounded-full bg-[#0284c7] text-white text-xs font-bold hover:bg-[#0369a1] shadow-xs">
+                        Start
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sun 24 May */}
+                <div className="flex gap-4">
+                  <div className="w-12 text-center shrink-0">
+                    <p className="text-[10px] font-bold uppercase text-zinc-400">Sun</p>
+                    <p className="text-2xl font-black text-zinc-900">24</p>
+                    <p className="text-[10px] font-bold text-zinc-400">May</p>
+                  </div>
+                  <div className="flex-1 space-y-2.5">
+                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200">
+                      <div className="flex items-center gap-3">
+                        <div className="h-5 w-5 rounded-full border-2 border-zinc-300 shrink-0" />
+                        <div>
+                          <p className="text-xs font-bold text-zinc-900">Full-length digital SAT practice</p>
+                          <p className="text-[10px] text-zinc-400">Practice test / 134 min / 98 questions</p>
+                        </div>
+                      </div>
+                      <Link href="/dashboard" className="text-xs font-bold text-[#0284c7] hover:underline">Start &gt;</Link>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200">
+                      <div className="flex items-center gap-3">
+                        <div className="h-5 w-5 rounded-full border-2 border-zinc-300 shrink-0" />
+                        <div>
+                          <p className="text-xs font-bold text-zinc-900">Mistakes review</p>
+                          <p className="text-[10px] text-zinc-400">Review / 30 min / Allocated session</p>
+                        </div>
+                      </div>
+                      <Link href="/dashboard" className="text-xs font-bold text-[#0284c7] hover:underline">Start &gt;</Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: 2 Cards */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* Card 1: Never lose track of test day */}
+              <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-zinc-400">Time left to SAT exam</span>
+                  <Clock className="h-4 w-4 text-zinc-400" />
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-black text-zinc-950">8</span>
+                  <span className="text-xs font-bold text-zinc-400 uppercase">days</span>
+                  <span className="text-3xl font-black text-zinc-950 ml-2">09</span>
+                  <span className="text-xs font-bold text-zinc-400 uppercase">hrs</span>
+                  <span className="text-3xl font-black text-zinc-950 ml-2">20</span>
+                  <span className="text-xs font-bold text-zinc-400 uppercase">min</span>
+                </div>
+                <p className="text-xs font-bold text-[#0284c7] bg-sky-50 py-1.5 px-3 rounded-xl inline-block border border-sky-100">
+                  Saturday, November 7
+                </p>
+                <div className="pt-2 border-t border-zinc-100">
+                  <h4 className="text-base font-bold text-zinc-900">Never lose track of test day</h4>
+                  <p className="text-xs text-zinc-500 font-medium mt-0.5">
+                    Always see time left alongside your weekly plan.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 2: Syncs with Google Calendar */}
+              <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
+                <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shadow-xs">
+                  <span className="text-xl font-black">31</span>
+                </div>
+                <div>
+                  <h4 className="text-base font-bold text-zinc-900">Syncs with Google Calendar</h4>
+                  <p className="text-xs text-zinc-500 font-medium mt-1 leading-relaxed">
+                    Your study sessions show up in Google Calendar, and your plan works around what is already there.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 8. MASTERCLASS SECTION ---------------- */}
+      <section className="py-24 bg-white border-t border-zinc-100">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-2xl mb-10">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 text-rose-700 font-black text-xs px-3.5 py-1 mb-4 border border-rose-200">
+              <Play className="h-3.5 w-3.5 fill-current" />
+              Masterclass
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950 leading-tight">
+              Learn with the OnePrep Masterclass
+            </h2>
+            <p className="text-base sm:text-lg text-zinc-600 font-medium mt-3 leading-relaxed">
+              Work through 110+ SAT lessons across Reading & Writing and Math skills. Learn with examples and guided Desmos walkthroughs.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all active:scale-95"
+              >
+                <span>Get started for free</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Toggle pill */}
+          <div className="flex items-center gap-3 mb-8">
+            <button
+              onClick={() => setMasterclassTab("rw")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all ${
+                masterclassTab === "rw"
+                  ? "bg-black text-white"
+                  : "bg-white text-zinc-600 border border-zinc-200 hover:text-black"
+              }`}
+            >
+              Reading & Writing
+            </button>
+            <button
+              onClick={() => setMasterclassTab("math")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all ${
+                masterclassTab === "math"
+                  ? "bg-black text-white"
+                  : "bg-white text-zinc-600 border border-zinc-200 hover:text-black"
+              }`}
+            >
+              Math
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left: Video Player Mockup */}
+            <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-zinc-200 bg-zinc-950 shadow-2xl">
+              <div className="aspect-video relative flex flex-col justify-between p-6 bg-gradient-to-tr from-zinc-900 via-zinc-800 to-zinc-900">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase text-zinc-400 bg-black/40 px-3 py-1 rounded-full border border-white/10">
+                    Lesson 4: Verb Elimination Rules
+                  </span>
+                  <CloudMascot size={26} />
+                </div>
+
+                {/* Center Play Button */}
+                <div className="flex items-center justify-center">
+                  <Link
+                    href="/dashboard"
+                    className="h-18 w-18 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-105 transition-all"
+                  >
+                    <Play className="h-8 w-8 ml-1 fill-current" />
+                  </Link>
+                </div>
+
+                {/* Video controls */}
+                <div className="space-y-2 bg-black/60 backdrop-blur-md rounded-2xl p-3 border border-white/10">
+                  <div className="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#38bdf8] rounded-full" style={{ width: "28%" }} />
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-white/80 font-mono">
+                    <div className="flex items-center gap-3">
+                      <Play className="h-3.5 w-3.5 fill-current cursor-pointer hover:text-white" />
+                      <Volume2 className="h-3.5 w-3.5 cursor-pointer hover:text-white" />
+                      <span>1:00 / 8:24</span>
+                    </div>
+                    <Maximize2 className="h-3.5 w-3.5 cursor-pointer hover:text-white" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: 2 Cards */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* Card 1: 1580 Scorer */}
+              <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="h-14 w-14 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                    👨‍🏫
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">
+                        Georgia Tech
+                      </span>
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">
+                        800 Math
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-black text-zinc-950 mt-1">Learn from a 1580 scorer</h4>
+                  </div>
+                </div>
+                <p className="text-xs sm:text-sm text-zinc-600 font-medium leading-relaxed">
+                  Scott has mentored hundreds of students to transformative 1500+ scores through real exam-proven techniques.
+                </p>
+              </div>
+
+              {/* Card 2: Strategy Tags */}
+              <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
+                <h4 className="text-lg font-black text-zinc-950">Master proven test-day strategies</h4>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "The Three Versus One Rule",
+                    "Non-Main Verb Elimination",
+                    "Modifier Agreement",
+                    "SOHCAHTOA Acronym",
+                    "Identify the main claim",
+                    "Respect assigned variables",
+                    "Plug and play method"
+                  ].map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-zinc-100 text-zinc-700 border border-zinc-200 hover:bg-zinc-200 transition-colors"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-zinc-500 font-medium mt-1">
+                  Understand frameworks to stay calm and avoid traps.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 9. ADVANCED ANALYTICS SECTION ---------------- */}
+      <section className="py-24 bg-[#FAFCFD]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-2xl mb-12">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-700 font-black text-xs px-3.5 py-1 mb-4 border border-purple-200">
+              <BarChart3 className="h-3.5 w-3.5" />
+              Advanced Analytics
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950 leading-tight">
+              Know your weak spots before test day
+            </h2>
+            <p className="text-base sm:text-lg text-zinc-600 font-medium mt-3 leading-relaxed">
+              See your accuracy by topic, your pacing against other students, and the difficulty bands where you&apos;re losing time.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all active:scale-95"
+              >
+                <span>Get started for free</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left Card: Know exactly where you stand */}
+            <div className="lg:col-span-7 rounded-3xl bg-white border border-zinc-200 p-6 sm:p-8 shadow-xl space-y-6">
+              <div>
+                <h3 className="text-xl font-black text-zinc-950">Know exactly where you stand</h3>
+                <p className="text-xs sm:text-sm text-zinc-500 font-medium mt-1">
+                  See weekly activity, accuracy by topic, and time share by difficulty so you know exactly what to practice.
+                </p>
+              </div>
+
+              {/* Stacked Bar Chart */}
+              <div className="p-4 rounded-2xl bg-zinc-50 border border-zinc-200">
+                <div className="flex items-center justify-between text-[11px] font-bold text-zinc-400 mb-3">
+                  <span>WEEKLY ACCURACY PROGRESSION</span>
+                  <span>11 WEEKS</span>
+                </div>
+                <div className="flex items-end justify-between h-36 gap-2 pt-2">
+                  {[
+                    { date: "Mar 24", green: 40, orange: 30, red: 15 },
+                    { date: "Mar 31", green: 45, orange: 28, red: 12 },
+                    { date: "Apr 7",  green: 50, orange: 25, red: 14 },
+                    { date: "Apr 14", green: 55, orange: 24, red: 10 },
+                    { date: "Apr 21", green: 62, orange: 20, red: 11 },
+                    { date: "Apr 28", green: 68, orange: 18, red: 8 },
+                    { date: "May 5",  green: 74, orange: 15, red: 6 },
+                    { date: "May 12", green: 78, orange: 14, red: 5 },
+                    { date: "May 19", green: 82, orange: 12, red: 4 },
+                    { date: "May 26", green: 85, orange: 10, red: 3 },
+                    { date: "Jun 2",  green: 89, orange: 8,  red: 2 },
+                  ].map((bar, i) => (
+                    <div key={i} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+                      <div className="w-full max-w-[20px] flex flex-col gap-0.5 rounded-t-md overflow-hidden">
+                        <div className="bg-emerald-400" style={{ height: `${bar.green}%` }} />
+                        <div className="bg-amber-400" style={{ height: `${bar.orange}%` }} />
+                        <div className="bg-rose-400" style={{ height: `${bar.red}%` }} />
+                      </div>
+                      <span className="text-[9px] font-semibold text-zinc-400 truncate">{bar.date}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Accuracy Bars */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-xs font-bold text-zinc-800">
+                      <span>Information and Ideas</span>
+                      <span className="text-sky-600">72%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-zinc-200 rounded-full mt-1 overflow-hidden">
+                      <div className="h-full bg-sky-500 rounded-full" style={{ width: "72%" }} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs font-bold text-zinc-800">
+                      <span>Craft and Structure</span>
+                      <span className="text-sky-600">58%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-zinc-200 rounded-full mt-1 overflow-hidden">
+                      <div className="h-full bg-sky-500 rounded-full" style={{ width: "58%" }} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs font-bold text-zinc-800">
+                      <span>Standard English Conventions</span>
+                      <span className="text-sky-600">81%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-zinc-200 rounded-full mt-1 overflow-hidden">
+                      <div className="h-full bg-sky-500 rounded-full" style={{ width: "81%" }} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-xs font-bold text-zinc-800">
+                      <span>Algebra</span>
+                      <span className="text-emerald-600">64%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-zinc-200 rounded-full mt-1 overflow-hidden">
+                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: "64%" }} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs font-bold text-zinc-800">
+                      <span>Advanced Math</span>
+                      <span className="text-emerald-600">47%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-zinc-200 rounded-full mt-1 overflow-hidden">
+                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: "47%" }} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs font-bold text-zinc-800">
+                      <span>Problem-Solving & Data</span>
+                      <span className="text-emerald-600">76%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-zinc-200 rounded-full mt-1 overflow-hidden">
+                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: "76%" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Two Pacing Dials */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-zinc-100">
+                <div className="flex items-center gap-3 p-3 rounded-2xl bg-zinc-50 border border-zinc-200">
+                  <div className="h-12 w-12 rounded-full border-4 border-sky-400 flex items-center justify-center font-black text-xs text-zinc-900">
+                    2m 12s
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-zinc-900">Reading & Writing</p>
+                    <div className="flex items-center gap-2 text-[10px] text-zinc-500 mt-0.5">
+                      <span>🟢 46s</span>
+                      <span>🟡 1m 14s</span>
+                      <span>🔴 2m 52s</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-2xl bg-zinc-50 border border-zinc-200">
+                  <div className="h-12 w-12 rounded-full border-4 border-emerald-400 flex items-center justify-center font-black text-xs text-zinc-900">
+                    1m 58s
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-zinc-900">Math</p>
+                    <div className="flex items-center gap-2 text-[10px] text-zinc-500 mt-0.5">
+                      <span>🟢 55s</span>
+                      <span>🟡 1m 35s</span>
+                      <span>🔴 2m 01s</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: 2 Cards */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* Card 1: See how you pace */}
+              <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
+                <h4 className="text-lg font-black text-zinc-950">See how you pace</h4>
+                <p className="text-xs text-zinc-500 font-medium">
+                  Compare your pacing to thousands of other students on the platform to see where you stand.
+                </p>
+
+                {/* Range candles */}
+                <div className="h-32 flex items-end justify-between gap-3 p-4 bg-zinc-50 rounded-2xl border border-zinc-200">
+                  {[
+                    { range: "0:45", user: "0:30" },
+                    { range: "0:35", user: "0:25" },
+                    { range: "0:50", user: "0:40" },
+                    { range: "1:00", user: "0:55" },
+                    { range: "0:30", user: "0:20" },
+                    { range: "0:40", user: "0:35" },
+                    { range: "0:25", user: "0:15" },
+                  ].map((p, idx) => (
+                    <div key={idx} className="flex-1 flex flex-col items-center justify-end h-full relative">
+                      <div className="w-1.5 bg-sky-200 rounded-full h-24 relative flex items-center justify-center">
+                        <div className="h-3 w-3 rounded-full bg-[#0284c7] ring-2 ring-white shadow-xs absolute" style={{ bottom: `${(idx * 12) + 20}%` }} />
+                      </div>
+                      <span className="text-[9px] text-zinc-400 mt-2 font-mono">Q{idx + 1}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Card 2: Track your daily activity Heatmap */}
+              <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
+                <h4 className="text-lg font-black text-zinc-950">Track your daily activity</h4>
+                <p className="text-xs text-zinc-500 font-medium">
+                  See how daily practice adds up over time.
+                </p>
+
+                {/* Heatmap grid */}
+                <div className="space-y-3 p-4 bg-zinc-50 rounded-2xl border border-zinc-200">
+                  <div className="flex justify-between text-[11px] font-bold text-zinc-500">
+                    <span>Sep 2026</span>
+                    <span>Oct 2026</span>
+                  </div>
+                  <div className="grid grid-cols-14 gap-1.5">
+                    {Array.from({ length: 70 }).map((_, i) => {
+                      const intensities = ["bg-zinc-200", "bg-sky-200", "bg-sky-400", "bg-sky-600"];
+                      const color = intensities[i % intensities.length];
+                      return (
+                        <div
+                          key={i}
+                          className={`h-3 w-3 rounded-xs ${color} transition-all hover:scale-125`}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="flex items-center justify-end gap-1 text-[10px] text-zinc-400">
+                    <span>Less</span>
+                    <div className="h-2.5 w-2.5 rounded-xs bg-zinc-200" />
+                    <div className="h-2.5 w-2.5 rounded-xs bg-sky-200" />
+                    <div className="h-2.5 w-2.5 rounded-xs bg-sky-400" />
+                    <div className="h-2.5 w-2.5 rounded-xs bg-sky-600" />
+                    <span>More</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 10. 15+ OTHER FEATURES SECTION ---------------- */}
+      <section className="py-24 bg-white border-t border-zinc-100">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
-            Achieve a{" "}
+            15+ other features to help you study{" "}
             <span className="relative inline-block">
-              life-changing
+              effectively
               <HandDrawnUnderline className="absolute -bottom-2 left-0 w-full" />
-            </span>{" "}
-            score
+            </span>
           </h2>
+          <p className="text-sm sm:text-base text-zinc-500 font-medium mt-3">
+            Explore the toolkit that makes OnePrep the top choice for Digital SAT students.
+          </p>
 
-          <div className="relative">
-            <blockquote className="text-xl sm:text-2xl font-bold text-zinc-800 leading-relaxed font-serif">
-              “OnePrep stands out for its high-quality practice questions and detailed video explanations. I&apos;m using OnePrep Pro to work toward my target SAT score of 1550.”
-            </blockquote>
+          {/* Active Feature Spotlight */}
+          <div className="mt-8 inline-block px-5 py-2 rounded-full bg-zinc-100 border border-zinc-200 text-sm font-bold text-zinc-800">
+            {featuresList[activeFeature].name}: {featuresList[activeFeature].desc}
+          </div>
 
-            <div className="mt-8 flex flex-col items-center justify-center gap-2">
-              <div className="h-12 w-12 rounded-full bg-cyan-200 ring-2 ring-white shadow-md flex items-center justify-center font-bold text-cyan-900 text-lg">
-                👨‍🎓
-              </div>
-              <div className="text-center">
-                <p className="font-extrabold text-zinc-900 text-base">Abid</p>
-                <p className="text-xs text-zinc-500 font-medium">Dream school: Stanford University</p>
-              </div>
-            </div>
-
-            {/* Pagination Dots */}
-            <div className="flex items-center justify-center gap-2 mt-6">
-              <span className="h-2 w-2 rounded-full bg-[#0284c7]" />
-              <span className="h-2 w-6 rounded-full bg-[#0284c7]" />
-              <span className="h-2 w-2 rounded-full bg-zinc-300" />
-            </div>
+          {/* Feature Badges Carousel */}
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-4 max-w-5xl mx-auto">
+            {featuresList.map((feat, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveFeature(idx)}
+                className={`p-4 rounded-2xl border flex flex-col items-center gap-2 transition-all cursor-pointer ${
+                  activeFeature === idx
+                    ? `${feat.color} shadow-lg scale-105 ring-2 ring-black`
+                    : "bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-xs"
+                }`}
+              >
+                <span className="text-3xl">{feat.icon}</span>
+                <span className="text-xs font-bold">{feat.name}</span>
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ---------------- 7. FOOTER & CTA TO DASHBOARD ---------------- */}
-      <footer className="bg-zinc-950 text-white py-16 border-t border-zinc-900">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <CloudMascot size={32} />
-            <div>
-              <p className="text-lg font-black text-white">OnePrep</p>
-              <p className="text-xs text-zinc-400">Digital SAT & MS Study Platform</p>
-            </div>
+      {/* ---------------- 11. ONEPREP USERS CRUSH THEIR EXAMS (9 Testimonials) ---------------- */}
+      <section className="py-24 bg-[#FAFCFD]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
+              OnePrep Users Crush Their Exams
+            </h2>
+            <p className="text-base sm:text-xl text-zinc-500 font-medium mt-3">
+              Real students, real score jumps. See how OnePrep helped them walk into test day confident.
+            </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-xs text-zinc-400 font-semibold">
-            <Link href="/dashboard" className="text-white hover:text-[#38bdf8] transition-colors">
-              Platforma Dashboardi
-            </Link>
-            <Link href="#pricing" className="hover:text-white transition-colors">
-              Pricing
-            </Link>
-            <Link href="#terms" className="hover:text-white transition-colors">
-              Terms of Service
-            </Link>
-            <Link href="#privacy" className="hover:text-white transition-colors">
-              Privacy Policy
-            </Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {testimonialsList.map((t, idx) => (
+              <article
+                key={idx}
+                className="rounded-3xl bg-white border border-zinc-200 p-6 shadow-md hover:shadow-xl transition-all flex flex-col justify-between space-y-4"
+              >
+                {/* Score Pill */}
+                <div className="flex items-center justify-between">
+                  <div
+                    className="inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-black"
+                    style={{ backgroundColor: `${t.color}20`, color: t.color }}
+                  >
+                    <span>{t.fromScore}</span>
+                    <span>→</span>
+                    <span>{t.toScore}</span>
+                  </div>
+                  <span
+                    className="text-xs font-black"
+                    style={{ color: t.color }}
+                  >
+                    {t.diff}
+                  </span>
+                </div>
+
+                {/* Quote */}
+                <blockquote className="text-sm font-medium text-zinc-700 leading-relaxed">
+                  &ldquo;{t.quote}&rdquo;
+                </blockquote>
+
+                {/* Author Info */}
+                <div className="flex items-center gap-3 pt-3 border-t border-zinc-100">
+                  <div className="h-10 w-10 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center font-bold text-zinc-700 text-sm">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black text-zinc-950">{t.name}</h3>
+                    <p className="text-xs text-zinc-400 font-medium">OnePrep User</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 12. FREQUENTLY ASKED QUESTIONS ---------------- */}
+      <section className="py-24 bg-white border-t border-zinc-100">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
+              Frequently Asked Questions
+            </h2>
           </div>
 
-          <div>
+          <div className="space-y-4">
+            {faqItems.map((item, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-zinc-200 overflow-hidden transition-colors"
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    className="w-full flex items-center justify-between p-5 text-left font-bold text-base text-zinc-950 hover:bg-zinc-50 transition-colors"
+                  >
+                    <span>{item.q}</span>
+                    <ChevronDown
+                      className={`h-5 w-5 text-zinc-400 transition-transform duration-200 ${
+                        isOpen ? "rotate-180 text-black" : ""
+                      }`}
+                    />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="px-5 pb-5 pt-1 text-sm text-zinc-600 font-medium leading-relaxed border-t border-zinc-100">
+                          {item.a}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 13. FINAL CTA BANNER ---------------- */}
+      <section className="py-20 bg-[#0E4363] text-white relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6 text-center space-y-6 relative z-10">
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+            Join 450k+ students on the #1 DSAT Platform. Now with APs and ACTs.
+          </h2>
+          <p className="text-base sm:text-xl text-sky-100 max-w-2xl mx-auto">
+            Take a free diagnostic test in 15 minutes and unlock your personalized study path today.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 rounded-full bg-white hover:bg-zinc-100 text-black font-bold px-6 py-3 text-xs shadow-md transition-all"
+              className="rounded-full bg-white hover:bg-zinc-100 text-black font-black px-8 py-4 text-base shadow-xl transition-all active:scale-95 flex items-center gap-2"
             >
-              <LayoutDashboard className="h-4 w-4" />
-              <span>Dashboardga kirish</span>
+              <span>Get Started for Free</span>
+              <ArrowRight className="h-5 w-5" />
             </Link>
+            <Link
+              href="/dashboard"
+              className="rounded-full bg-sky-900/60 hover:bg-sky-900 border border-sky-400/30 text-white font-bold px-7 py-4 text-base transition-all"
+            >
+              Sign in to Dashboard
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 14. FOOTER ---------------- */}
+      <footer className="bg-zinc-950 text-white py-16 border-t border-zinc-900">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-12 border-b border-zinc-800">
+            {/* Brand */}
+            <div className="col-span-2 space-y-4">
+              <div className="flex items-center gap-2.5">
+                <CloudMascot size={32} />
+                <span className="text-2xl font-black text-white">OnePrep</span>
+              </div>
+              <p className="text-xs text-zinc-400 max-w-sm leading-relaxed">
+                The all-in-one preparation platform for the Digital SAT, Enhanced ACT, AP exams, and College Admissions.
+              </p>
+              <div className="pt-2">
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center gap-2 rounded-full bg-white hover:bg-zinc-100 text-black font-bold px-5 py-2.5 text-xs shadow-md transition-all"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span>Platform Dashboardi</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Exam Tracks */}
+            <div>
+              <p className="text-xs font-black uppercase text-zinc-400 tracking-wider mb-3">Exams</p>
+              <ul className="space-y-2 text-xs text-zinc-400 font-medium">
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Digital SAT</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Enhanced ACT</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">AP Calculus AB/BC</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">AP Biology & Chemistry</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">AP US History</Link></li>
+              </ul>
+            </div>
+
+            {/* Features */}
+            <div>
+              <p className="text-xs font-black uppercase text-zinc-400 tracking-wider mb-3">Features</p>
+              <ul className="space-y-2 text-xs text-zinc-400 font-medium">
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Question Bank</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Study Planner</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Masterclass</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Ask Preppy AI</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Score Analytics</Link></li>
+              </ul>
+            </div>
+
+            {/* Company & Legal */}
+            <div>
+              <p className="text-xs font-black uppercase text-zinc-400 tracking-wider mb-3">Company</p>
+              <ul className="space-y-2 text-xs text-zinc-400 font-medium">
+                <li><Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">For Schools</Link></li>
+                <li><Link href="#terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                <li><Link href="#privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 font-medium gap-4">
+            <p>© 2026 OnePrep Inc. All rights reserved.</p>
+            <p>SAT® is a registered trademark of the College Board, which was not involved in the production of, and does not endorse, this product.</p>
           </div>
         </div>
       </footer>
