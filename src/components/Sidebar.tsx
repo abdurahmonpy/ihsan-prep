@@ -1,229 +1,360 @@
 "use client";
 
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 import {
-  LayoutDashboard,
-  CalendarDays,
-  Target,
-  ClipboardCheck,
+  Home,
   Bot,
+  Calendar,
+  BarChart2,
+  Bookmark,
   BookOpen,
-  Languages,
-  Layers3,
-  BarChart3,
+  Zap,
+  Swords,
+  Clock,
+  Layers,
+  Smartphone,
+  MoreHorizontal,
+  Settings,
   ChevronRight,
-  Sparkles,
-  Command,
+  Search,
+  ArrowUpCircle,
   PanelLeftClose,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@/context/SidebarContext";
 
-const navSections = [
-  {
-    label: "Study",
-    items: [
-      { icon: LayoutDashboard, label: "Dashboard", href: "/" },
-      { icon: CalendarDays, label: "Study plan", href: "#study-plan" },
-      { icon: Target, label: "Practice", href: "#practice" },
-      { icon: ClipboardCheck, label: "Mock Tests", href: "#mock-tests" },
-      { icon: Bot, label: "AI Tutor", href: "#ai-tutor", badge: "AI" },
-    ],
-  },
-  {
-    label: "Learn",
-    items: [
-      { icon: BookOpen, label: "Courses", href: "#courses" },
-      { icon: Languages, label: "Vocabulary", href: "#vocabulary" },
-      { icon: Layers3, label: "Flashcards", href: "#flashcards" },
-    ],
-  },
-  {
-    label: "Insights",
-    items: [
-      { icon: BarChart3, label: "Progress & Analytics", href: "#analytics" },
-    ],
-  },
-];
+// Cute OnePrep Cloud Mascot SVG
+function CloudMascot() {
+  return (
+    <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
+      <svg viewBox="0 0 36 36" className="w-full h-full drop-shadow-sm">
+        <defs>
+          <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#7EE7F8" />
+            <stop offset="100%" stopColor="#38BDF8" />
+          </linearGradient>
+        </defs>
+        {/* Fluffy Cloud Body */}
+        <path
+          d="M9 22.5C6.5 22.5 4.5 20.5 4.5 18C4.5 15.8 6.1 13.9 8.3 13.6C9.1 10.3 12 8 15.5 8C19.3 8 22.5 10.7 23.1 14.4C24 13.8 25.2 13.5 26.5 13.5C29.5 13.5 32 16 32 19C32 22 29.5 24.5 26.5 24.5L9 24.5Z"
+          fill="url(#cloudGrad)"
+        />
+        {/* Cute Big Eyes */}
+        <ellipse cx="14" cy="18" rx="2" ry="2.6" fill="#0C4A6E" />
+        <ellipse cx="22" cy="18" rx="2" ry="2.6" fill="#0C4A6E" />
+        <circle cx="14.8" cy="17.2" r="0.9" fill="#FFFFFF" />
+        <circle cx="22.8" cy="17.2" r="0.9" fill="#FFFFFF" />
+        {/* Pink Rosy Cheeks */}
+        <circle cx="10" cy="20" r="1.6" fill="#FB7185" opacity="0.85" />
+        <circle cx="26" cy="20" r="1.6" fill="#FB7185" opacity="0.85" />
+        {/* Happy Smile */}
+        <path
+          d="M16 20.5Q18 22.5 20 20.5"
+          stroke="#0C4A6E"
+          strokeWidth="1.3"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </svg>
+    </div>
+  );
+}
 
-const sidebarVariants: Variants = {
-  hidden: { x: -260, opacity: 0 },
-  visible: {
-    x: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.3,
-      ease: [0.16, 1, 0.3, 1],
-      staggerChildren: 0.02,
-    },
-  },
-  exit: {
-    x: -260,
-    opacity: 0,
-    transition: {
-      duration: 0.25,
-      ease: [0.16, 1, 0.3, 1],
-    },
-  },
-};
+// User Profile Mascot Avatar
+function UserMascotAvatar() {
+  return (
+    <div className="relative h-8 w-8 rounded-full bg-[#38bdf8] p-0.5 flex items-center justify-center overflow-hidden shrink-0 shadow-md">
+      <svg viewBox="0 0 36 36" className="w-full h-full">
+        <circle cx="18" cy="18" r="17" fill="#67e8f9" />
+        {/* Glasses Frame */}
+        <circle cx="12.5" cy="18" r="5" fill="#0284c7" stroke="#7e22ce" strokeWidth="1.6" />
+        <circle cx="23.5" cy="18" r="5" fill="#0284c7" stroke="#7e22ce" strokeWidth="1.6" />
+        <line x1="17.5" y1="18" x2="18.5" y2="18" stroke="#7e22ce" strokeWidth="2" />
+        {/* Eyes inside glasses */}
+        <circle cx="12.5" cy="18" r="2" fill="#ffffff" />
+        <circle cx="13" cy="17.5" r="1" fill="#000000" />
+        <circle cx="23.5" cy="18" r="2" fill="#ffffff" />
+        <circle cx="24" cy="17.5" r="1" fill="#000000" />
+        {/* Cheeks */}
+        <circle cx="7.5" cy="22" r="2" fill="#f43f5e" opacity="0.9" />
+        <circle cx="28.5" cy="22" r="2" fill="#f43f5e" opacity="0.9" />
+        {/* Mouth */}
+        <path d="M15.5 23Q18 25.5 20.5 23" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+      </svg>
+    </div>
+  );
+}
 
-const itemVariants: Variants = {
-  hidden: { x: -10, opacity: 0 },
-  visible: {
-    x: 0,
-    opacity: 1,
-    transition: { duration: 0.2, ease: "easeOut" },
-  },
-};
+// Custom Math & Desmos Icon
+function MathSymbolsIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <line x1="5" y1="7" x2="11" y2="7" />
+      <line x1="8" y1="4" x2="8" y2="10" />
+      <line x1="14" y1="7" x2="20" y2="7" />
+      <circle cx="17" cy="14" r="1" fill="currentColor" />
+      <line x1="14" y1="17" x2="20" y2="17" />
+      <circle cx="17" cy="20" r="1" fill="currentColor" />
+      <line x1="5" y1="14" x2="11" y2="20" />
+      <line x1="11" y1="14" x2="5" y2="20" />
+    </svg>
+  );
+}
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { isOpen, closeSidebar } = useSidebar();
+  const [selectedTrack, setSelectedTrack] = useState<"SAT" | "MS">("SAT");
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.aside
-          variants={sidebarVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="fixed left-0 top-0 bottom-0 z-40 flex w-[260px] flex-col border-r border-black/[0.08] dark:border-white/10 bg-white/95 dark:bg-black/95 backdrop-blur-2xl transition-colors shadow-xl"
+          initial={{ x: -260, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -260, opacity: 0 }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed left-0 top-0 bottom-0 z-40 flex w-[248px] flex-col bg-[#135073] text-white select-none shadow-2xl font-sans"
         >
-          {/* Logo with Crown Icon & Close Button */}
-          <motion.div
-            variants={itemVariants}
-            className="flex items-center justify-between gap-2 px-5 py-5 border-b border-black/[0.06] dark:border-white/[0.08]"
-          >
-            <div className="flex items-center gap-3 overflow-hidden">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-black dark:bg-white text-white dark:text-black shadow-md">
-                <Command className="h-5 w-5" strokeWidth={2.5} />
-              </div>
-              <div className="truncate">
-                <h1 className="text-sm font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-1.5 truncate">
-                  Ihsan Prep
-                  <Image
-                    src="/crown.png"
-                    alt="Crown"
-                    width={18}
-                    height={18}
-                    className="inline-block object-contain -mt-0.5 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)] shrink-0"
-                  />
-                </h1>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400 font-medium truncate">
-                  Study Platform
-                </p>
-              </div>
-            </div>
+          {/* Header Row: Logo + Search + Close */}
+          <div className="flex items-center justify-between px-4 pt-4 pb-2.5">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity" title="Tanishtiruv sahifasiga qaytish">
+              <CloudMascot />
+              <span className="text-xl font-extrabold tracking-tight text-white">
+                OnePrep
+              </span>
+            </Link>
 
-            {/* Close Sidebar Button */}
-            <button
-              onClick={closeSidebar}
-              aria-label="Menyuni yopish"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-zinc-400 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10"
-              title="Menyuni yopish"
-            >
-              <PanelLeftClose className="h-4 w-4" />
-            </button>
-          </motion.div>
-
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-            {navSections.map((section) => (
-              <div key={section.label}>
-                <motion.p
-                  variants={itemVariants}
-                  className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
-                >
-                  {section.label}
-                </motion.p>
-                <div className="space-y-1">
-                  {section.items.map((item) => {
-                    const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-                    return (
-                      <motion.div key={item.label} variants={itemVariants}>
-                        <Link
-                          href={item.href}
-                          className={`group relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                            isActive
-                              ? "bg-black dark:bg-white text-white dark:text-black font-semibold shadow-sm"
-                              : "text-zinc-600 dark:text-zinc-400 hover:bg-black/[0.04] dark:hover:bg-white/[0.08] hover:text-black dark:hover:text-white"
-                          }`}
-                        >
-                          <item.icon
-                            className={`h-[18px] w-[18px] transition-colors duration-200 ${
-                              isActive
-                                ? "text-white dark:text-black"
-                                : "text-zinc-500 dark:text-zinc-400 group-hover:text-black dark:hover:text-white"
-                            }`}
-                            strokeWidth={1.75}
-                          />
-                          <span className="flex-1 truncate">{item.label}</span>
-                          {"badge" in item && item.badge && (
-                            <span
-                              className={`ml-auto rounded-full px-2 py-0.5 text-[10px] font-semibold border ${
-                                isActive
-                                  ? "bg-white/20 dark:bg-black/10 text-white dark:text-black border-transparent"
-                                  : "bg-black/5 dark:bg-white/10 text-zinc-700 dark:text-zinc-200 border-black/10 dark:border-white/20"
-                              }`}
-                            >
-                              {item.badge}
-                            </span>
-                          )}
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </nav>
-
-          {/* Upgrade card */}
-          <motion.div variants={itemVariants} className="px-3 pb-3">
-            <div className="rounded-2xl p-4 bg-zinc-100 dark:bg-zinc-950 border border-black/[0.08] dark:border-white/10 backdrop-blur-xl relative overflow-hidden transition-colors">
-              <div className="mb-3 flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black/5 dark:bg-white/10 text-black dark:text-white border border-black/10 dark:border-white/15">
-                  <Sparkles className="h-4 w-4" strokeWidth={2} />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-zinc-900 dark:text-white">Free Plan</p>
-                  <p className="text-[10px] text-zinc-500 dark:text-zinc-400">Unlock full SAT questions</p>
-                </div>
-              </div>
-              <button className="group flex w-full items-center justify-between rounded-xl bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 px-3.5 py-2 text-xs font-semibold text-white dark:text-black transition-all active:scale-[0.98] shadow-sm">
-                Explore plans
-                <ChevronRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+            <div className="flex items-center gap-1">
+              <button
+                className="h-8 w-8 rounded-xl flex items-center justify-center text-[#7eaec6] hover:text-white hover:bg-[#1a5f87] transition-colors"
+                title="Qidiruv"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+              <button
+                onClick={closeSidebar}
+                aria-label="Menyuni yopish"
+                className="h-8 w-8 rounded-xl flex items-center justify-center text-[#7eaec6] hover:text-white hover:bg-[#1a5f87] transition-colors md:hidden"
+                title="Menyuni yopish"
+              >
+                <PanelLeftClose className="h-4 w-4" />
               </button>
             </div>
-          </motion.div>
+          </div>
 
-          {/* User with Real Avatar Image */}
-          <motion.div
-            variants={itemVariants}
-            className="border-t border-black/[0.06] dark:border-white/[0.08] px-4 py-3.5 bg-zinc-50 dark:bg-zinc-950/60 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="relative h-9 w-9 shrink-0">
-                <Image
-                  src="/avatar.png"
-                  alt="Abdurrohmon Avatar"
-                  width={36}
-                  height={36}
-                  className="rounded-xl object-cover shadow-sm ring-1 ring-black/10 dark:ring-white/20"
-                />
-                <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white dark:border-black bg-emerald-500" />
+          {/* Top Pill Selector: Faqat SAT va MS */}
+          <div className="px-3 py-2">
+            <div className="bg-[#245e80] p-1 rounded-full flex items-center shadow-inner">
+              <button
+                onClick={() => setSelectedTrack("SAT")}
+                className={`flex-1 py-1.5 rounded-full text-xs font-black transition-all text-center ${
+                  selectedTrack === "SAT"
+                    ? "bg-white text-[#135073] shadow-sm"
+                    : "text-[#c2dded] hover:text-white"
+                }`}
+              >
+                SAT
+              </button>
+              <button
+                onClick={() => setSelectedTrack("MS")}
+                className={`flex-1 py-1.5 rounded-full text-xs font-black transition-all text-center ${
+                  selectedTrack === "MS"
+                    ? "bg-white text-[#135073] shadow-sm"
+                    : "text-[#c2dded] hover:text-white"
+                }`}
+              >
+                MS
+              </button>
+            </div>
+          </div>
+
+          {/* Scrollable Navigation Area */}
+          <nav className="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-4 text-xs font-medium scrollbar-thin scrollbar-thumb-[#245e80] scrollbar-track-transparent">
+            {/* General Menu Items */}
+            <div className="space-y-1">
+              {/* Home (Active Item) */}
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-3 rounded-full bg-white text-[#135073] font-bold px-3.5 py-2.5 shadow-sm transition-all"
+              >
+                <Home className="h-4 w-4 fill-[#135073]" strokeWidth={1.5} />
+                <span className="text-[13px] font-bold">Home</span>
+              </Link>
+
+              <Link
+                href="#tutor"
+                className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+              >
+                <Bot className="h-4 w-4" strokeWidth={2} />
+                <span className="text-[13px]">Ask Preppy Tutor</span>
+              </Link>
+
+              <Link
+                href="#planner"
+                className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+              >
+                <Calendar className="h-4 w-4" strokeWidth={2} />
+                <span className="text-[13px]">Study Planner</span>
+              </Link>
+
+              <Link
+                href="#analytics"
+                className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+              >
+                <BarChart2 className="h-4 w-4" strokeWidth={2} />
+                <span className="text-[13px]">Analytics</span>
+              </Link>
+
+              <Link
+                href="#saved"
+                className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+              >
+                <Bookmark className="h-4 w-4" strokeWidth={2} />
+                <span className="text-[13px]">Saved & Mistakes</span>
+              </Link>
+            </div>
+
+            {/* MASTERCLASS Section */}
+            <div>
+              <div className="flex items-center gap-2 px-3 py-1 mb-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#6e9bb3]">
+                  MASTERCLASS
+                </span>
+                <span className="rounded bg-[#009bd6] px-1.5 py-0.5 text-[9px] font-extrabold text-white leading-none shadow-xs">
+                  New
+                </span>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <p className="truncate text-xs font-semibold text-zinc-900 dark:text-white">
-                  Abdurrohmon
-                </p>
-                <p className="truncate text-[10px] text-zinc-500 dark:text-zinc-400">Student · Ihsan SAT</p>
+              <div className="space-y-0.5">
+                <Link
+                  href="#reading"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                >
+                  <BookOpen className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-[13px]">Reading & Writing</span>
+                </Link>
+
+                <Link
+                  href="#math"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                >
+                  <MathSymbolsIcon className="h-4 w-4" />
+                  <span className="text-[13px]">Math & Desmos</span>
+                </Link>
               </div>
             </div>
-          </motion.div>
+
+            {/* PRACTICE Section */}
+            <div>
+              <div className="px-3 py-1 mb-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#6e9bb3]">
+                  PRACTICE
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <Link
+                  href="#question-bank"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                >
+                  <div className="h-4 w-4 rounded border border-current flex items-center justify-center text-[10px] font-black">
+                    ?
+                  </div>
+                  <span className="text-[13px]">Question Bank</span>
+                </Link>
+
+                <Link
+                  href="#rush"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                >
+                  <Zap className="h-4 w-4 fill-current text-[#7ee7f8]" />
+                  <span className="text-[13px]">Question Rush</span>
+                </Link>
+
+                <Link
+                  href="#challenge"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                >
+                  <Swords className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-[13px]">Challenge Questions</span>
+                </Link>
+
+                <Link
+                  href="#full-tests"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                >
+                  <Clock className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-[13px]">Full-Length Tests</span>
+                </Link>
+
+                <Link
+                  href="#vocab"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                >
+                  <Layers className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-[13px]">Vocab</span>
+                </Link>
+              </div>
+            </div>
+          </nav>
+
+          {/* Footer Items (Getting Started, Upgrade, App, More, Profile) */}
+          <div className="px-3 pt-2 pb-3 border-t border-[#1a5f87]/60 space-y-2 bg-[#104868]">
+            {/* Getting started 0/6 pill */}
+            <div className="bg-[#245e80] rounded-xl px-3 py-2 flex items-center justify-between text-xs font-semibold shadow-inner cursor-pointer hover:bg-[#2b6d93] transition-colors">
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 rounded-full border-2 border-[#7ee7f8] flex items-center justify-center" />
+                <span className="text-white text-[12px] font-bold">Getting started</span>
+              </div>
+              <span className="text-[#8ec1db] text-[11px] font-extrabold">0/6</span>
+            </div>
+
+            {/* Upgrade with 40% Off Gold Badge */}
+            <button className="w-full flex items-center justify-between px-2 py-1.5 text-xs font-bold text-white hover:bg-[#1a5f87] rounded-xl transition-colors">
+              <div className="flex items-center gap-2.5">
+                <ArrowUpCircle className="h-4 w-4 text-[#fbbf24]" />
+                <span className="text-white text-[12px] font-bold">Upgrade</span>
+              </div>
+              <span className="bg-[#fbbf24] text-black font-black text-[10px] px-2 py-0.5 rounded-lg shadow-sm">
+                40% Off
+              </span>
+            </button>
+
+            {/* Get the app */}
+            <button className="w-full flex items-center justify-between px-2 py-1 text-xs font-semibold text-[#d2e4ee] hover:text-white hover:bg-[#1a5f87] rounded-xl transition-colors">
+              <div className="flex items-center gap-2.5">
+                <Smartphone className="h-4 w-4" strokeWidth={2} />
+                <span className="text-[12px]">Get the app</span>
+              </div>
+              <ChevronRight className="h-3.5 w-3.5 text-[#7eaec6]" />
+            </button>
+
+            {/* More */}
+            <button className="w-full flex items-center justify-between px-2 py-1 text-xs font-semibold text-[#d2e4ee] hover:text-white hover:bg-[#1a5f87] rounded-xl transition-colors">
+              <div className="flex items-center gap-2.5">
+                <MoreHorizontal className="h-4 w-4" strokeWidth={2} />
+                <span className="text-[12px]">More</span>
+              </div>
+              <ChevronRight className="h-3.5 w-3.5 text-[#7eaec6]" />
+            </button>
+
+            {/* User Profile Row */}
+            <div className="pt-2 border-t border-[#1a5f87]/50 flex items-center justify-between px-1">
+              <div className="flex items-center gap-2.5 overflow-hidden">
+                <UserMascotAvatar />
+                <span className="text-[13px] font-bold text-white truncate">
+                  Abdurrohman
+                </span>
+              </div>
+              <button
+                className="text-[#7eaec6] hover:text-white transition-colors p-1 rounded-lg"
+                title="Sozlamalar"
+              >
+                <Settings className="h-4 w-4" strokeWidth={2} />
+              </button>
+            </div>
+          </div>
         </motion.aside>
       )}
     </AnimatePresence>
