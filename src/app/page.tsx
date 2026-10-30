@@ -222,7 +222,7 @@ export default function LandingPage() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
             <CloudMascot size={34} />
-            <span className="text-2xl font-black tracking-tight text-zinc-950">
+            <span className="text-2xl font-medium tracking-tight text-zinc-950">
               OnePrep
             </span>
           </Link>
@@ -264,7 +264,7 @@ export default function LandingPage() {
               Log in
             </Link>
             <Link
-              href="/dashboard"
+              href="/auth/signup"
               className="rounded-full bg-black hover:bg-zinc-800 text-white px-5 py-2.5 text-sm font-bold shadow-md transition-all active:scale-95 flex items-center gap-2"
             >
               <span>Sign up</span>
@@ -280,7 +280,7 @@ export default function LandingPage() {
           {/* Left Text Column */}
           <div className="order-last -mt-8 w-full max-w-4xl lg:order-first lg:mt-0">
             <div className="flex flex-col items-center gap-7 text-center lg:items-start lg:text-left">
-              <h1 className="text-balance text-4xl leading-[1.1] tracking-[-0.045em] sm:text-5xl md:text-5xl lg:text-6xl text-zinc-950 font-black">
+              <h1 className="text-balance text-4xl leading-[1.1] tracking-[-0.045em] sm:text-5xl md:text-5xl lg:text-6xl text-zinc-950 font-medium">
                 Your{" "}
                 <span className="relative inline-block whitespace-nowrap">
                   All-in-One
@@ -305,7 +305,7 @@ export default function LandingPage() {
 
               <div className="flex w-full flex-wrap items-center justify-center gap-4 lg:justify-start pt-2">
                 <Link
-                  href="/dashboard"
+                  href="/auth/signup"
                   className="inline-flex shrink-0 cursor-pointer items-center justify-center whitespace-nowrap font-bold transition-all rounded-full bg-black hover:bg-zinc-800 text-white h-13 px-8 text-lg shadow-lg active:scale-95"
                 >
                   Get Started for Free
@@ -322,7 +322,7 @@ export default function LandingPage() {
               <div className="pt-2 flex items-center gap-2 text-xs font-bold text-zinc-500">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>OnePrep Dashboard tizimiga kirish:</span>
-                <Link href="/dashboard" className="text-[#0284c7] font-extrabold underline hover:text-[#0369a1]">
+                <Link href="/dashboard" className="text-[#0284c7] font-medium underline hover:text-[#0369a1]">
                   Platforma Dashboardi →
                 </Link>
               </div>
@@ -351,7 +351,7 @@ export default function LandingPage() {
               {/* Header Bar */}
               <div className="flex items-center justify-between pb-3.5 border-b border-zinc-100">
                 <div className="flex items-center gap-2">
-                  <span className="h-7 w-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center text-xs font-black">
+                  <span className="h-7 w-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center text-xs font-medium">
                     8
                   </span>
                   <span className="text-xs font-bold text-zinc-500 flex items-center gap-1.5">
@@ -359,7 +359,7 @@ export default function LandingPage() {
                     Mark for Review
                   </span>
                 </div>
-                <span className="text-xs font-black uppercase tracking-wider text-sky-600 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-100">
+                <span className="text-xs font-medium uppercase tracking-wider text-sky-600 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-100">
                   Digital SAT
                 </span>
               </div>
@@ -368,9 +368,9 @@ export default function LandingPage() {
               <div className="mt-4 p-3.5 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 text-white flex items-center justify-between shadow-lg">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Predicted Score</p>
-                  <p className="text-2xl font-black text-white">1570</p>
+                  <p className="text-2xl font-medium text-white">1570</p>
                 </div>
-                <div className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 text-xs font-black">
+                <div className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 text-xs font-medium">
                   +180 points
                 </div>
               </div>
@@ -398,7 +398,7 @@ export default function LandingPage() {
                     }`}
                   >
                     <span
-                      className={`h-6 w-6 rounded-lg flex items-center justify-center text-xs font-black ${
+                      className={`h-6 w-6 rounded-lg flex items-center justify-center text-xs font-medium ${
                         heroOption === opt.key ? "bg-[#0284c7] text-white" : "bg-zinc-100 text-zinc-600"
                       }`}
                     >
@@ -446,7 +446,7 @@ export default function LandingPage() {
             ].map((uni, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-center text-white/80 hover:text-white transition-opacity font-serif font-black tracking-wider text-xs sm:text-sm text-center px-2 py-1"
+                className="flex items-center justify-center text-white/80 hover:text-white transition-opacity font-serif font-medium tracking-wider text-xs sm:text-sm text-center px-2 py-1"
               >
                 {uni}
               </div>
@@ -459,7 +459,7 @@ export default function LandingPage() {
       <section className="py-24 bg-[#FAFCFD]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
+            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950">
               Diagnose, plan, & practice{" "}
               <span className="relative inline-block">
                 smarter
@@ -473,7 +473,7 @@ export default function LandingPage() {
             <div className="rounded-3xl bg-white border border-zinc-200/80 p-7 shadow-lg flex flex-col justify-between hover:shadow-xl transition-all">
               <div className="rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] p-5 mb-8">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Predicted Score</p>
-                <p className="text-4xl font-black text-zinc-900 mt-1">1420</p>
+                <p className="text-4xl font-medium text-zinc-900 mt-1">1420</p>
                 <div className="flex items-center gap-3 text-xs text-zinc-500 font-semibold mt-1 pb-3 border-b border-zinc-200">
                   <span>Reading & Writing: <strong>720</strong></span>
                   <span>•</span>
@@ -481,7 +481,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="mt-3 space-y-2">
-                  <p className="text-[10px] font-extrabold uppercase text-zinc-400">Focus next</p>
+                  <p className="text-[10px] font-medium uppercase text-zinc-400">Focus next</p>
                   <div>
                     <div className="flex justify-between text-[11px] font-bold text-zinc-700">
                       <span>Information and Ideas</span>
@@ -513,7 +513,7 @@ export default function LandingPage() {
               </div>
 
               <div>
-                <span className="text-3xl font-black text-zinc-300">01</span>
+                <span className="text-3xl font-medium text-zinc-300">01</span>
                 <h3 className="text-xl font-bold text-zinc-900 mt-2">Take your diagnostic</h3>
                 <p className="text-sm text-zinc-600 mt-1 leading-relaxed">
                   See your projected score and the domains losing you the most points.
@@ -556,7 +556,7 @@ export default function LandingPage() {
               </div>
 
               <div>
-                <span className="text-3xl font-black text-zinc-300">02</span>
+                <span className="text-3xl font-medium text-zinc-300">02</span>
                 <h3 className="text-xl font-bold text-zinc-900 mt-2">Get your tailored plan</h3>
                 <p className="text-sm text-zinc-600 mt-1 leading-relaxed">
                   Tell us your test date and target. The schedule rebuilds itself as your accuracy changes.
@@ -589,7 +589,7 @@ export default function LandingPage() {
               </div>
 
               <div>
-                <span className="text-3xl font-black text-zinc-300">03</span>
+                <span className="text-3xl font-medium text-zinc-300">03</span>
                 <h3 className="text-xl font-bold text-zinc-900 mt-2">Hit your target score</h3>
                 <p className="text-sm text-zinc-600 mt-1 leading-relaxed">
                   Targeted drills, questions, and exercises built around your weakest skills.
@@ -603,7 +603,7 @@ export default function LandingPage() {
       {/* ---------------- 5. TESTIMONIAL ABID ---------------- */}
       <section className="py-24 bg-gradient-to-b from-[#E3F5FC] via-[#EDF9FE] to-white relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
+          <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950">
             Achieve a{" "}
             <span className="relative inline-block">
               life-changing
@@ -622,7 +622,7 @@ export default function LandingPage() {
                 👨‍🎓
               </div>
               <div className="text-center">
-                <p className="font-extrabold text-zinc-900 text-lg">Abid</p>
+                <p className="font-medium text-zinc-900 text-lg">Abid</p>
                 <p className="text-sm text-zinc-500 font-medium">Dream school: Stanford University</p>
               </div>
             </div>
@@ -641,11 +641,11 @@ export default function LandingPage() {
       <section className="py-24 bg-white border-t border-zinc-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-700 font-black text-xs px-3.5 py-1 mb-4 border border-purple-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-700 font-medium text-xs px-3.5 py-1 mb-4 border border-purple-200">
               <span className="h-4 w-4 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px]">?</span>
               Question Bank
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950 leading-tight">
+            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950 leading-tight">
               Never stay stuck on a question
             </h2>
             <p className="text-base sm:text-lg text-zinc-600 font-medium mt-3 leading-relaxed">
@@ -653,7 +653,7 @@ export default function LandingPage() {
             </p>
             <div className="pt-4">
               <Link
-                href="/dashboard"
+                href="/auth/signup"
                 className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all active:scale-95"
               >
                 <span>Get started for free</span>
@@ -757,7 +757,7 @@ export default function LandingPage() {
                   <div className="flex items-center gap-2.5">
                     <CloudMascot size={28} />
                     <div>
-                      <p className="text-xs font-black text-zinc-900">How can I help?</p>
+                      <p className="text-xs font-medium text-zinc-900">How can I help?</p>
                       <p className="text-[10px] text-zinc-400 font-medium">Ask Preppy any question!</p>
                     </div>
                   </div>
@@ -786,11 +786,11 @@ export default function LandingPage() {
       <section id="planner" className="py-24 bg-[#FAFCFD]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl mb-12">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-700 font-black text-xs px-3.5 py-1 mb-4 border border-blue-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-700 font-medium text-xs px-3.5 py-1 mb-4 border border-blue-200">
               <Calendar className="h-3.5 w-3.5" />
               Study Planner
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950 leading-tight">
+            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950 leading-tight">
               Stop wondering what to study next
             </h2>
             <p className="text-base sm:text-lg text-zinc-600 font-medium mt-3 leading-relaxed">
@@ -798,7 +798,7 @@ export default function LandingPage() {
             </p>
             <div className="pt-4">
               <Link
-                href="/dashboard"
+                href="/auth/signup"
                 className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all active:scale-95"
               >
                 <span>Get started for free</span>
@@ -811,7 +811,7 @@ export default function LandingPage() {
             {/* Left Card: Your week at a glance */}
             <div className="lg:col-span-7 rounded-3xl bg-white border border-zinc-200 p-6 sm:p-8 shadow-xl space-y-6">
               <div className="border-b border-zinc-100 pb-4">
-                <h3 className="text-xl font-black text-zinc-950">Your week at a glance</h3>
+                <h3 className="text-xl font-medium text-zinc-950">Your week at a glance</h3>
                 <p className="text-xs sm:text-sm text-zinc-500 font-medium mt-1">
                   See what to work on each day, how long it takes, and where to start when you sit down.
                 </p>
@@ -823,7 +823,7 @@ export default function LandingPage() {
                 <div className="flex gap-4">
                   <div className="w-12 text-center shrink-0">
                     <p className="text-[10px] font-bold uppercase text-zinc-400">Thu</p>
-                    <p className="text-2xl font-black text-zinc-900">21</p>
+                    <p className="text-2xl font-medium text-zinc-900">21</p>
                     <p className="text-[10px] font-bold text-zinc-400">May</p>
                   </div>
                   <div className="flex-1 space-y-2.5">
@@ -855,7 +855,7 @@ export default function LandingPage() {
                 <div className="flex gap-4">
                   <div className="w-12 text-center shrink-0">
                     <p className="text-[10px] font-bold uppercase text-zinc-400">Sat</p>
-                    <p className="text-2xl font-black text-zinc-900">23</p>
+                    <p className="text-2xl font-medium text-zinc-900">23</p>
                     <p className="text-[10px] font-bold text-zinc-400">May</p>
                   </div>
                   <div className="flex-1">
@@ -878,7 +878,7 @@ export default function LandingPage() {
                 <div className="flex gap-4">
                   <div className="w-12 text-center shrink-0">
                     <p className="text-[10px] font-bold uppercase text-zinc-400">Sun</p>
-                    <p className="text-2xl font-black text-zinc-900">24</p>
+                    <p className="text-2xl font-medium text-zinc-900">24</p>
                     <p className="text-[10px] font-bold text-zinc-400">May</p>
                   </div>
                   <div className="flex-1 space-y-2.5">
@@ -913,15 +913,15 @@ export default function LandingPage() {
               {/* Card 1: Never lose track of test day */}
               <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase tracking-wider text-zinc-400">Time left to SAT exam</span>
+                  <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">Time left to SAT exam</span>
                   <Clock className="h-4 w-4 text-zinc-400" />
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-black text-zinc-950">8</span>
+                  <span className="text-4xl font-medium text-zinc-950">8</span>
                   <span className="text-xs font-bold text-zinc-400 uppercase">days</span>
-                  <span className="text-3xl font-black text-zinc-950 ml-2">09</span>
+                  <span className="text-3xl font-medium text-zinc-950 ml-2">09</span>
                   <span className="text-xs font-bold text-zinc-400 uppercase">hrs</span>
-                  <span className="text-3xl font-black text-zinc-950 ml-2">20</span>
+                  <span className="text-3xl font-medium text-zinc-950 ml-2">20</span>
                   <span className="text-xs font-bold text-zinc-400 uppercase">min</span>
                 </div>
                 <p className="text-xs font-bold text-[#0284c7] bg-sky-50 py-1.5 px-3 rounded-xl inline-block border border-sky-100">
@@ -938,7 +938,7 @@ export default function LandingPage() {
               {/* Card 2: Syncs with Google Calendar */}
               <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
                 <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shadow-xs">
-                  <span className="text-xl font-black">31</span>
+                  <span className="text-xl font-medium">31</span>
                 </div>
                 <div>
                   <h4 className="text-base font-bold text-zinc-900">Syncs with Google Calendar</h4>
@@ -956,11 +956,11 @@ export default function LandingPage() {
       <section className="py-24 bg-white border-t border-zinc-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl mb-10">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 text-rose-700 font-black text-xs px-3.5 py-1 mb-4 border border-rose-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 text-rose-700 font-medium text-xs px-3.5 py-1 mb-4 border border-rose-200">
               <Play className="h-3.5 w-3.5 fill-current" />
               Masterclass
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950 leading-tight">
+            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950 leading-tight">
               Learn with the OnePrep Masterclass
             </h2>
             <p className="text-base sm:text-lg text-zinc-600 font-medium mt-3 leading-relaxed">
@@ -968,7 +968,7 @@ export default function LandingPage() {
             </p>
             <div className="pt-4">
               <Link
-                href="/dashboard"
+                href="/auth/signup"
                 className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all active:scale-95"
               >
                 <span>Get started for free</span>
@@ -1006,7 +1006,7 @@ export default function LandingPage() {
             <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-zinc-200 bg-zinc-950 shadow-2xl">
               <div className="aspect-video relative flex flex-col justify-between p-6 bg-gradient-to-tr from-zinc-900 via-zinc-800 to-zinc-900">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase text-zinc-400 bg-black/40 px-3 py-1 rounded-full border border-white/10">
+                  <span className="text-xs font-medium uppercase text-zinc-400 bg-black/40 px-3 py-1 rounded-full border border-white/10">
                     Lesson 4: Verb Elimination Rules
                   </span>
                   <CloudMascot size={26} />
@@ -1049,14 +1049,14 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">
+                      <span className="text-[10px] font-medium uppercase px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">
                         Georgia Tech
                       </span>
-                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">
+                      <span className="text-[10px] font-medium uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">
                         800 Math
                       </span>
                     </div>
-                    <h4 className="text-lg font-black text-zinc-950 mt-1">Learn from a 1580 scorer</h4>
+                    <h4 className="text-lg font-medium text-zinc-950 mt-1">Learn from a 1580 scorer</h4>
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm text-zinc-600 font-medium leading-relaxed">
@@ -1066,7 +1066,7 @@ export default function LandingPage() {
 
               {/* Card 2: Strategy Tags */}
               <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
-                <h4 className="text-lg font-black text-zinc-950">Master proven test-day strategies</h4>
+                <h4 className="text-lg font-medium text-zinc-950">Master proven test-day strategies</h4>
                 <div className="flex flex-wrap gap-2">
                   {[
                     "The Three Versus One Rule",
@@ -1098,11 +1098,11 @@ export default function LandingPage() {
       <section className="py-24 bg-[#FAFCFD]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl mb-12">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-700 font-black text-xs px-3.5 py-1 mb-4 border border-purple-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-700 font-medium text-xs px-3.5 py-1 mb-4 border border-purple-200">
               <BarChart3 className="h-3.5 w-3.5" />
               Advanced Analytics
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950 leading-tight">
+            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950 leading-tight">
               Know your weak spots before test day
             </h2>
             <p className="text-base sm:text-lg text-zinc-600 font-medium mt-3 leading-relaxed">
@@ -1110,7 +1110,7 @@ export default function LandingPage() {
             </p>
             <div className="pt-4">
               <Link
-                href="/dashboard"
+                href="/auth/signup"
                 className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-zinc-800 text-white font-bold px-7 py-3.5 text-sm shadow-md transition-all active:scale-95"
               >
                 <span>Get started for free</span>
@@ -1123,7 +1123,7 @@ export default function LandingPage() {
             {/* Left Card: Know exactly where you stand */}
             <div className="lg:col-span-7 rounded-3xl bg-white border border-zinc-200 p-6 sm:p-8 shadow-xl space-y-6">
               <div>
-                <h3 className="text-xl font-black text-zinc-950">Know exactly where you stand</h3>
+                <h3 className="text-xl font-medium text-zinc-950">Know exactly where you stand</h3>
                 <p className="text-xs sm:text-sm text-zinc-500 font-medium mt-1">
                   See weekly activity, accuracy by topic, and time share by difficulty so you know exactly what to practice.
                 </p>
@@ -1227,7 +1227,7 @@ export default function LandingPage() {
               {/* Two Pacing Dials */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-zinc-100">
                 <div className="flex items-center gap-3 p-3 rounded-2xl bg-zinc-50 border border-zinc-200">
-                  <div className="h-12 w-12 rounded-full border-4 border-sky-400 flex items-center justify-center font-black text-xs text-zinc-900">
+                  <div className="h-12 w-12 rounded-full border-4 border-sky-400 flex items-center justify-center font-medium text-xs text-zinc-900">
                     2m 12s
                   </div>
                   <div>
@@ -1241,7 +1241,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-3 rounded-2xl bg-zinc-50 border border-zinc-200">
-                  <div className="h-12 w-12 rounded-full border-4 border-emerald-400 flex items-center justify-center font-black text-xs text-zinc-900">
+                  <div className="h-12 w-12 rounded-full border-4 border-emerald-400 flex items-center justify-center font-medium text-xs text-zinc-900">
                     1m 58s
                   </div>
                   <div>
@@ -1260,7 +1260,7 @@ export default function LandingPage() {
             <div className="lg:col-span-5 space-y-6">
               {/* Card 1: See how you pace */}
               <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
-                <h4 className="text-lg font-black text-zinc-950">See how you pace</h4>
+                <h4 className="text-lg font-medium text-zinc-950">See how you pace</h4>
                 <p className="text-xs text-zinc-500 font-medium">
                   Compare your pacing to thousands of other students on the platform to see where you stand.
                 </p>
@@ -1288,7 +1288,7 @@ export default function LandingPage() {
 
               {/* Card 2: Track your daily activity Heatmap */}
               <div className="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-xl space-y-4">
-                <h4 className="text-lg font-black text-zinc-950">Track your daily activity</h4>
+                <h4 className="text-lg font-medium text-zinc-950">Track your daily activity</h4>
                 <p className="text-xs text-zinc-500 font-medium">
                   See how daily practice adds up over time.
                 </p>
@@ -1329,7 +1329,7 @@ export default function LandingPage() {
       {/* ---------------- 10. 15+ OTHER FEATURES SECTION ---------------- */}
       <section className="py-24 bg-white border-t border-zinc-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
+          <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950">
             15+ other features to help you study{" "}
             <span className="relative inline-block">
               effectively
@@ -1369,7 +1369,7 @@ export default function LandingPage() {
       <section className="py-24 bg-[#FAFCFD]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
+            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950">
               OnePrep Users Crush Their Exams
             </h2>
             <p className="text-base sm:text-xl text-zinc-500 font-medium mt-3">
@@ -1386,7 +1386,7 @@ export default function LandingPage() {
                 {/* Score Pill */}
                 <div className="flex items-center justify-between">
                   <div
-                    className="inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-black"
+                    className="inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-medium"
                     style={{ backgroundColor: `${t.color}20`, color: t.color }}
                   >
                     <span>{t.fromScore}</span>
@@ -1394,7 +1394,7 @@ export default function LandingPage() {
                     <span>{t.toScore}</span>
                   </div>
                   <span
-                    className="text-xs font-black"
+                    className="text-xs font-medium"
                     style={{ color: t.color }}
                   >
                     {t.diff}
@@ -1412,7 +1412,7 @@ export default function LandingPage() {
                     {t.name.charAt(0)}
                   </div>
                   <div>
-                    <h3 className="text-sm font-black text-zinc-950">{t.name}</h3>
+                    <h3 className="text-sm font-medium text-zinc-950">{t.name}</h3>
                     <p className="text-xs text-zinc-400 font-medium">OnePrep User</p>
                   </div>
                 </div>
@@ -1426,7 +1426,7 @@ export default function LandingPage() {
       <section className="py-24 bg-white border-t border-zinc-100">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-zinc-950">
+            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-zinc-950">
               Frequently Asked Questions
             </h2>
           </div>
@@ -1475,7 +1475,7 @@ export default function LandingPage() {
       {/* ---------------- 13. FINAL CTA BANNER ---------------- */}
       <section className="py-20 bg-[#0E4363] text-white relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-6 text-center space-y-6 relative z-10">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-5xl font-medium tracking-tight leading-tight">
             Join 450k+ students on the #1 DSAT Platform. Now with APs and ACTs.
           </h2>
           <p className="text-base sm:text-xl text-sky-100 max-w-2xl mx-auto">
@@ -1484,8 +1484,8 @@ export default function LandingPage() {
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
             <Link
-              href="/dashboard"
-              className="rounded-full bg-white hover:bg-zinc-100 text-black font-black px-8 py-4 text-base shadow-xl transition-all active:scale-95 flex items-center gap-2"
+              href="/auth/signup"
+              className="rounded-full bg-white hover:bg-zinc-100 text-black font-medium px-8 py-4 text-base shadow-xl transition-all active:scale-95 flex items-center gap-2"
             >
               <span>Get Started for Free</span>
               <ArrowRight className="h-5 w-5" />
@@ -1508,7 +1508,7 @@ export default function LandingPage() {
             <div className="col-span-2 space-y-4">
               <div className="flex items-center gap-2.5">
                 <CloudMascot size={32} />
-                <span className="text-2xl font-black text-white">OnePrep</span>
+                <span className="text-2xl font-medium text-white">OnePrep</span>
               </div>
               <p className="text-xs text-zinc-400 max-w-sm leading-relaxed">
                 The all-in-one preparation platform for the Digital SAT, Enhanced ACT, AP exams, and College Admissions.
@@ -1526,7 +1526,7 @@ export default function LandingPage() {
 
             {/* Exam Tracks */}
             <div>
-              <p className="text-xs font-black uppercase text-zinc-400 tracking-wider mb-3">Exams</p>
+              <p className="text-xs font-medium uppercase text-zinc-400 tracking-wider mb-3">Exams</p>
               <ul className="space-y-2 text-xs text-zinc-400 font-medium">
                 <li><Link href="/dashboard" className="hover:text-white transition-colors">Digital SAT</Link></li>
                 <li><Link href="/dashboard" className="hover:text-white transition-colors">Enhanced ACT</Link></li>
@@ -1538,7 +1538,7 @@ export default function LandingPage() {
 
             {/* Features */}
             <div>
-              <p className="text-xs font-black uppercase text-zinc-400 tracking-wider mb-3">Features</p>
+              <p className="text-xs font-medium uppercase text-zinc-400 tracking-wider mb-3">Features</p>
               <ul className="space-y-2 text-xs text-zinc-400 font-medium">
                 <li><Link href="/dashboard" className="hover:text-white transition-colors">Question Bank</Link></li>
                 <li><Link href="/dashboard" className="hover:text-white transition-colors">Study Planner</Link></li>
@@ -1550,7 +1550,7 @@ export default function LandingPage() {
 
             {/* Company & Legal */}
             <div>
-              <p className="text-xs font-black uppercase text-zinc-400 tracking-wider mb-3">Company</p>
+              <p className="text-xs font-medium uppercase text-zinc-400 tracking-wider mb-3">Company</p>
               <ul className="space-y-2 text-xs text-zinc-400 font-medium">
                 <li><Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
                 <li><Link href="/dashboard" className="hover:text-white transition-colors">For Schools</Link></li>

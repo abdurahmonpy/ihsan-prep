@@ -77,7 +77,7 @@ export default function ScoreChart() {
             </span>
           </div>
           <div className="flex flex-wrap items-baseline gap-4 mt-2">
-            <h3 className="text-4xl sm:text-5xl font-black tracking-tight text-zinc-900 dark:text-white">
+            <h3 className="text-4xl sm:text-5xl font-medium tracking-tight text-zinc-900 dark:text-white">
               {activePoint.score}
               <span className="text-base font-semibold text-zinc-500 ml-1.5">/ 1600</span>
             </h3>
@@ -283,18 +283,18 @@ export default function ScoreChart() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-black/10 dark:border-white/10 relative z-10">
         <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.04] p-4 border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all">
           <p className="text-[11px] uppercase font-bold tracking-wider text-zinc-500 dark:text-zinc-400">Hozirgi daraja</p>
-          <p className="text-xl font-black text-zinc-900 dark:text-white mt-1">1290 ball</p>
+          <p className="text-xl font-medium text-zinc-900 dark:text-white mt-1">1290 ball</p>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Top 15% barcha o&apos;quvchilar orasida</p>
         </div>
         <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.04] p-4 border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all">
           <p className="text-[11px] uppercase font-bold tracking-wider text-zinc-500 dark:text-zinc-400">Prognoz maqsad</p>
-          <p className="text-xl font-black text-zinc-900 dark:text-white mt-1">1420 - 1480</p>
+          <p className="text-xl font-medium text-zinc-900 dark:text-white mt-1">1420 - 1480</p>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Noyabr rasmiy SAT imtihoni</p>
         </div>
         <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.04] p-4 border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all flex items-center justify-between">
           <div>
             <p className="text-[11px] uppercase font-bold tracking-wider text-zinc-500 dark:text-zinc-400">Yechilgan testlar</p>
-            <p className="text-xl font-black text-zinc-900 dark:text-white mt-1">14 ta to&apos;liq test</p>
+            <p className="text-xl font-medium text-zinc-900 dark:text-white mt-1">14 ta to&apos;liq test</p>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Har biri 134 ta savoldan iborat</p>
           </div>
           <div className="h-9 w-9 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-sm">

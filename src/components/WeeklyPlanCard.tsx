@@ -113,7 +113,7 @@ export default function WeeklyPlanCard() {
 
             {/* Inner Center Content - Big & Bold */}
             <div className="absolute flex flex-col items-center justify-center text-center">
-              <span className="text-5xl sm:text-6xl font-black tracking-tight text-zinc-900 dark:text-white leading-none">
+              <span className="text-5xl sm:text-6xl font-medium tracking-tight text-zinc-900 dark:text-white leading-none">
                 0%
               </span>
               <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-[0.25em] mt-2">

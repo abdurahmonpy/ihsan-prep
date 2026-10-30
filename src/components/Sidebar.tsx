@@ -7,13 +7,13 @@ import {
   Home,
   Bot,
   Calendar,
-  BarChart2,
-  Bookmark,
-  BookOpen,
-  Zap,
-  Swords,
-  Clock,
-  Layers,
+  User,
+  Compass,
+  FileText,
+  ShieldCheck,
+  Landmark,
+  Users,
+  GraduationCap,
   Smartphone,
   MoreHorizontal,
   Settings,
@@ -25,31 +25,27 @@ import {
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@/context/SidebarContext";
 
-// Cute OnePrep Cloud Mascot SVG
+// OnePrep Cloud Mascot SVG
 function CloudMascot() {
   return (
-    <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
-      <svg viewBox="0 0 36 36" className="w-full h-full drop-shadow-sm">
+    <div className="relative w-7 h-7 flex items-center justify-center shrink-0">
+      <svg viewBox="0 0 36 36" className="w-full h-full drop-shadow-xs">
         <defs>
-          <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="cloudGradSide" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#7EE7F8" />
             <stop offset="100%" stopColor="#38BDF8" />
           </linearGradient>
         </defs>
-        {/* Fluffy Cloud Body */}
         <path
           d="M9 22.5C6.5 22.5 4.5 20.5 4.5 18C4.5 15.8 6.1 13.9 8.3 13.6C9.1 10.3 12 8 15.5 8C19.3 8 22.5 10.7 23.1 14.4C24 13.8 25.2 13.5 26.5 13.5C29.5 13.5 32 16 32 19C32 22 29.5 24.5 26.5 24.5L9 24.5Z"
-          fill="url(#cloudGrad)"
+          fill="url(#cloudGradSide)"
         />
-        {/* Cute Big Eyes */}
         <ellipse cx="14" cy="18" rx="2" ry="2.6" fill="#0C4A6E" />
         <ellipse cx="22" cy="18" rx="2" ry="2.6" fill="#0C4A6E" />
         <circle cx="14.8" cy="17.2" r="0.9" fill="#FFFFFF" />
         <circle cx="22.8" cy="17.2" r="0.9" fill="#FFFFFF" />
-        {/* Pink Rosy Cheeks */}
         <circle cx="10" cy="20" r="1.6" fill="#FB7185" opacity="0.85" />
         <circle cx="26" cy="20" r="1.6" fill="#FB7185" opacity="0.85" />
-        {/* Happy Smile */}
         <path
           d="M16 20.5Q18 22.5 20 20.5"
           stroke="#0C4A6E"
@@ -62,51 +58,11 @@ function CloudMascot() {
   );
 }
 
-// User Profile Mascot Avatar
-function UserMascotAvatar() {
-  return (
-    <div className="relative h-8 w-8 rounded-full bg-[#38bdf8] p-0.5 flex items-center justify-center overflow-hidden shrink-0 shadow-md">
-      <svg viewBox="0 0 36 36" className="w-full h-full">
-        <circle cx="18" cy="18" r="17" fill="#67e8f9" />
-        {/* Glasses Frame */}
-        <circle cx="12.5" cy="18" r="5" fill="#0284c7" stroke="#7e22ce" strokeWidth="1.6" />
-        <circle cx="23.5" cy="18" r="5" fill="#0284c7" stroke="#7e22ce" strokeWidth="1.6" />
-        <line x1="17.5" y1="18" x2="18.5" y2="18" stroke="#7e22ce" strokeWidth="2" />
-        {/* Eyes inside glasses */}
-        <circle cx="12.5" cy="18" r="2" fill="#ffffff" />
-        <circle cx="13" cy="17.5" r="1" fill="#000000" />
-        <circle cx="23.5" cy="18" r="2" fill="#ffffff" />
-        <circle cx="24" cy="17.5" r="1" fill="#000000" />
-        {/* Cheeks */}
-        <circle cx="7.5" cy="22" r="2" fill="#f43f5e" opacity="0.9" />
-        <circle cx="28.5" cy="22" r="2" fill="#f43f5e" opacity="0.9" />
-        {/* Mouth */}
-        <path d="M15.5 23Q18 25.5 20.5 23" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-      </svg>
-    </div>
-  );
-}
-
-// Custom Math & Desmos Icon
-function MathSymbolsIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <line x1="5" y1="7" x2="11" y2="7" />
-      <line x1="8" y1="4" x2="8" y2="10" />
-      <line x1="14" y1="7" x2="20" y2="7" />
-      <circle cx="17" cy="14" r="1" fill="currentColor" />
-      <line x1="14" y1="17" x2="20" y2="17" />
-      <circle cx="17" cy="20" r="1" fill="currentColor" />
-      <line x1="5" y1="14" x2="11" y2="20" />
-      <line x1="11" y1="14" x2="5" y2="20" />
-    </svg>
-  );
-}
-
 export default function Sidebar() {
   const pathname = usePathname();
   const { isOpen, closeSidebar } = useSidebar();
-  const [selectedTrack, setSelectedTrack] = useState<"SAT" | "MS">("SAT");
+  const [selectedTrack, setSelectedTrack] = useState<"SAT" | "ACT" | "AP" | "College">("College");
+  const [activeMenu, setActiveMenu] = useState<string>("Home");
 
   return (
     <AnimatePresence>
@@ -116,225 +72,242 @@ export default function Sidebar() {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -260, opacity: 0 }}
           transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed left-0 top-0 bottom-0 z-40 flex w-[248px] flex-col bg-[#135073] text-white select-none shadow-2xl font-sans"
+          className="fixed left-0 top-0 bottom-0 z-40 flex w-[236px] flex-col bg-[#0e4369] text-white select-none shadow-2xl font-dm-sans"
         >
-          {/* Header Row: Logo + Search + Close */}
-          <div className="flex items-center justify-between px-4 pt-4 pb-2.5">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity" title="Tanishtiruv sahifasiga qaytish">
+          {/* Header Row: Logo + Search */}
+          <div className="flex items-center justify-between px-4 pt-3.5 pb-2">
+            <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
               <CloudMascot />
-              <span className="text-xl font-extrabold tracking-tight text-white">
+              <span className="text-lg font-bold tracking-tight text-white font-dm-sans">
                 OnePrep
               </span>
             </Link>
 
             <div className="flex items-center gap-1">
               <button
-                className="h-8 w-8 rounded-xl flex items-center justify-center text-[#7eaec6] hover:text-white hover:bg-[#1a5f87] transition-colors"
-                title="Qidiruv"
+                type="button"
+                className="h-7 w-7 rounded-lg flex items-center justify-center text-[#7eaec6] hover:text-white hover:bg-[#1a5f87] transition-colors cursor-pointer"
+                title="Search"
               >
                 <Search className="h-4 w-4" />
               </button>
               <button
+                type="button"
                 onClick={closeSidebar}
-                aria-label="Menyuni yopish"
-                className="h-8 w-8 rounded-xl flex items-center justify-center text-[#7eaec6] hover:text-white hover:bg-[#1a5f87] transition-colors md:hidden"
-                title="Menyuni yopish"
+                aria-label="Close menu"
+                className="h-7 w-7 rounded-lg flex items-center justify-center text-[#7eaec6] hover:text-white hover:bg-[#1a5f87] transition-colors md:hidden cursor-pointer"
               >
                 <PanelLeftClose className="h-4 w-4" />
               </button>
             </div>
           </div>
 
-          {/* Top Pill Selector: Faqat SAT va MS */}
-          <div className="px-3 py-2">
-            <div className="bg-[#245e80] p-1 rounded-full flex items-center shadow-inner">
-              <button
-                onClick={() => setSelectedTrack("SAT")}
-                className={`flex-1 py-1.5 rounded-full text-xs font-black transition-all text-center ${
-                  selectedTrack === "SAT"
-                    ? "bg-white text-[#135073] shadow-sm"
-                    : "text-[#c2dded] hover:text-white"
-                }`}
-              >
-                SAT
-              </button>
-              <button
-                onClick={() => setSelectedTrack("MS")}
-                className={`flex-1 py-1.5 rounded-full text-xs font-black transition-all text-center ${
-                  selectedTrack === "MS"
-                    ? "bg-white text-[#135073] shadow-sm"
-                    : "text-[#c2dded] hover:text-white"
-                }`}
-              >
-                MS
-              </button>
+          {/* Top Tabs: SAT | ACT | AP | College • */}
+          <div className="px-3 py-1.5">
+            <div className="flex items-center justify-between gap-1 text-[11px] font-medium">
+              {(["SAT", "ACT", "AP", "College"] as const).map((track) => {
+                const isActive = selectedTrack === track;
+                return (
+                  <button
+                    key={track}
+                    type="button"
+                    onClick={() => setSelectedTrack(track)}
+                    className={`py-1 px-2.5 rounded-full transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
+                      isActive
+                        ? "bg-white text-[#0e4369] font-bold shadow-xs"
+                        : "text-[#9ec4dc] hover:text-white"
+                    }`}
+                  >
+                    <span>{track}</span>
+                    {track === "College" && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#0e4369] inline-block" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {/* Scrollable Navigation Area */}
-          <nav className="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-4 text-xs font-medium scrollbar-thin scrollbar-thumb-[#245e80] scrollbar-track-transparent">
+          <nav className="flex-1 overflow-y-auto px-2.5 py-2 space-y-3.5 text-xs font-medium scrollbar-thin scrollbar-thumb-[#1a5f87] scrollbar-track-transparent">
             {/* General Menu Items */}
-            <div className="space-y-1">
-              {/* Home (Active Item) */}
+            <div className="space-y-0.5">
               <Link
                 href="/dashboard"
-                className="flex items-center gap-3 rounded-full bg-white text-[#135073] font-bold px-3.5 py-2.5 shadow-sm transition-all"
+                onClick={() => setActiveMenu("Home")}
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
+                  activeMenu === "Home"
+                    ? "bg-white text-[#0e4369] font-bold shadow-xs"
+                    : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
+                }`}
               >
-                <Home className="h-4 w-4 fill-[#135073]" strokeWidth={1.5} />
-                <span className="text-[13px] font-bold">Home</span>
+                <Home className={`h-4 w-4 ${activeMenu === "Home" ? "fill-[#0e4369]" : ""}`} strokeWidth={2} />
+                <span className="text-xs font-semibold">Home</span>
               </Link>
 
               <Link
-                href="#tutor"
-                className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                href="#advisor"
+                onClick={() => setActiveMenu("Advisor")}
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
+                  activeMenu === "Advisor"
+                    ? "bg-white text-[#0e4369] font-bold shadow-xs"
+                    : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
+                }`}
               >
                 <Bot className="h-4 w-4" strokeWidth={2} />
-                <span className="text-[13px]">Ask Preppy Tutor</span>
+                <span className="text-xs">Ask Preppy Advisor</span>
               </Link>
 
               <Link
                 href="#planner"
-                className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                onClick={() => setActiveMenu("Planner")}
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
+                  activeMenu === "Planner"
+                    ? "bg-white text-[#0e4369] font-bold shadow-xs"
+                    : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
+                }`}
               >
                 <Calendar className="h-4 w-4" strokeWidth={2} />
-                <span className="text-[13px]">Study Planner</span>
-              </Link>
-
-              <Link
-                href="#analytics"
-                className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
-              >
-                <BarChart2 className="h-4 w-4" strokeWidth={2} />
-                <span className="text-[13px]">Analytics</span>
-              </Link>
-
-              <Link
-                href="#saved"
-                className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
-              >
-                <Bookmark className="h-4 w-4" strokeWidth={2} />
-                <span className="text-[13px]">Saved & Mistakes</span>
+                <span className="text-xs">Planner</span>
               </Link>
             </div>
 
-            {/* MASTERCLASS Section */}
-            <div>
-              <div className="flex items-center gap-2 px-3 py-1 mb-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#6e9bb3]">
-                  MASTERCLASS
-                </span>
-                <span className="rounded bg-[#009bd6] px-1.5 py-0.5 text-[9px] font-extrabold text-white leading-none shadow-xs">
-                  New
+            {/* MY APPLICATION Section */}
+            <div className="space-y-1">
+              <div className="px-3 py-1">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7eb4d6]">
+                  MY APPLICATION
                 </span>
               </div>
               <div className="space-y-0.5">
                 <Link
-                  href="#reading"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                  href="#profile"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
                 >
-                  <BookOpen className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-[13px]">Reading & Writing</span>
+                  <User className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-xs">My Profile</span>
                 </Link>
 
                 <Link
-                  href="#math"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                  href="#chance-me"
+                  className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
                 >
-                  <MathSymbolsIcon className="h-4 w-4" />
-                  <span className="text-[13px]">Math & Desmos</span>
-                </Link>
-              </div>
-            </div>
-
-            {/* PRACTICE Section */}
-            <div>
-              <div className="px-3 py-1 mb-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#6e9bb3]">
-                  PRACTICE
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <Link
-                  href="#question-bank"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
-                >
-                  <div className="h-4 w-4 rounded border border-current flex items-center justify-center text-[10px] font-black">
-                    ?
+                  <div className="flex items-center gap-3">
+                    <Compass className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Chance Me</span>
                   </div>
-                  <span className="text-[13px]">Question Bank</span>
+                  <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
+                    New
+                  </span>
                 </Link>
 
                 <Link
-                  href="#rush"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                  href="#essay-grader"
+                  className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
                 >
-                  <Zap className="h-4 w-4 fill-current text-[#7ee7f8]" />
-                  <span className="text-[13px]">Question Rush</span>
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Essay Grader</span>
+                  </div>
+                  <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
+                    New
+                  </span>
                 </Link>
 
                 <Link
-                  href="#challenge"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                  href="#final-read"
+                  className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
                 >
-                  <Swords className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-[13px]">Challenge Questions</span>
+                  <div className="flex items-center gap-3">
+                    <ShieldCheck className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Final Read</span>
+                  </div>
+                  <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
+                    New
+                  </span>
+                </Link>
+              </div>
+            </div>
+
+            {/* DISCOVER Section */}
+            <div className="space-y-1">
+              <div className="px-3 py-1">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7eb4d6]">
+                  DISCOVER
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <Link
+                  href="#colleges"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                >
+                  <Landmark className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-xs">Colleges</span>
                 </Link>
 
                 <Link
-                  href="#full-tests"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                  href="#profiles"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
                 >
-                  <Clock className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-[13px]">Full-Length Tests</span>
+                  <Users className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-xs">Profiles</span>
                 </Link>
 
                 <Link
-                  href="#vocab"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#1a5f87] hover:text-white transition-colors"
+                  href="#essays"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
                 >
-                  <Layers className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-[13px]">Vocab</span>
+                  <FileText className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-xs">Essays</span>
+                </Link>
+
+                <Link
+                  href="#scholarships"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                >
+                  <GraduationCap className="h-4 w-4" strokeWidth={2} />
+                  <span className="text-xs">Scholarships</span>
                 </Link>
               </div>
             </div>
           </nav>
 
-          {/* Footer Items (Getting Started, Upgrade, App, More, Profile) */}
-          <div className="px-3 pt-2 pb-3 border-t border-[#1a5f87]/60 space-y-2 bg-[#104868]">
-            {/* Getting started 0/6 pill */}
-            <div className="bg-[#245e80] rounded-xl px-3 py-2 flex items-center justify-between text-xs font-semibold shadow-inner cursor-pointer hover:bg-[#2b6d93] transition-colors">
+          {/* Footer Actions & Profile */}
+          <div className="px-3 pt-2 pb-3 border-t border-[#1a5f87]/60 space-y-1.5 bg-[#0b3756]">
+            {/* Upgrade with 40% Off */}
+            <Link
+              href="/onboarding"
+              className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-[#16537f] rounded-xl transition-colors cursor-pointer"
+            >
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 rounded-full border-2 border-[#7ee7f8] flex items-center justify-center" />
-                <span className="text-white text-[12px] font-bold">Getting started</span>
-              </div>
-              <span className="text-[#8ec1db] text-[11px] font-extrabold">0/6</span>
-            </div>
-
-            {/* Upgrade with 40% Off Gold Badge */}
-            <button className="w-full flex items-center justify-between px-2 py-1.5 text-xs font-bold text-white hover:bg-[#1a5f87] rounded-xl transition-colors">
-              <div className="flex items-center gap-2.5">
                 <ArrowUpCircle className="h-4 w-4 text-[#fbbf24]" />
-                <span className="text-white text-[12px] font-bold">Upgrade</span>
+                <span className="text-xs font-bold text-white">Upgrade</span>
               </div>
-              <span className="bg-[#fbbf24] text-black font-black text-[10px] px-2 py-0.5 rounded-lg shadow-sm">
+              <span className="bg-[#fbbf24] text-black font-bold text-[10px] px-2 py-0.5 rounded-full shadow-xs">
                 40% Off
               </span>
-            </button>
+            </Link>
 
             {/* Get the app */}
-            <button className="w-full flex items-center justify-between px-2 py-1 text-xs font-semibold text-[#d2e4ee] hover:text-white hover:bg-[#1a5f87] rounded-xl transition-colors">
-              <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-[#d2e4ee] hover:text-white hover:bg-[#16537f] rounded-xl transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
                 <Smartphone className="h-4 w-4" strokeWidth={2} />
-                <span className="text-[12px]">Get the app</span>
+                <span className="text-xs">Get the app</span>
               </div>
               <ChevronRight className="h-3.5 w-3.5 text-[#7eaec6]" />
             </button>
 
             {/* More */}
-            <button className="w-full flex items-center justify-between px-2 py-1 text-xs font-semibold text-[#d2e4ee] hover:text-white hover:bg-[#1a5f87] rounded-xl transition-colors">
-              <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-[#d2e4ee] hover:text-white hover:bg-[#16537f] rounded-xl transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
                 <MoreHorizontal className="h-4 w-4" strokeWidth={2} />
-                <span className="text-[12px]">More</span>
+                <span className="text-xs">More</span>
               </div>
               <ChevronRight className="h-3.5 w-3.5 text-[#7eaec6]" />
             </button>
@@ -342,14 +315,19 @@ export default function Sidebar() {
             {/* User Profile Row */}
             <div className="pt-2 border-t border-[#1a5f87]/50 flex items-center justify-between px-1">
               <div className="flex items-center gap-2.5 overflow-hidden">
-                <UserMascotAvatar />
-                <span className="text-[13px] font-bold text-white truncate">
-                  Abdurrohman
+                <img
+                  src="/user-avatar.png"
+                  alt="Abdurahmon avatar"
+                  className="w-6 h-6 rounded-full object-cover shrink-0 border border-white/20"
+                />
+                <span className="text-xs font-semibold text-white truncate max-w-[110px]">
+                  Abdurahmon ...
                 </span>
               </div>
               <button
-                className="text-[#7eaec6] hover:text-white transition-colors p-1 rounded-lg"
-                title="Sozlamalar"
+                type="button"
+                className="text-[#7eaec6] hover:text-white transition-colors p-1 rounded-lg cursor-pointer"
+                title="Settings"
               >
                 <Settings className="h-4 w-4" strokeWidth={2} />
               </button>

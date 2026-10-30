@@ -25,7 +25,7 @@ export default function StatsGrid() {
 
         <div>
           <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-black tracking-tight text-zinc-900 dark:text-white">0%</p>
+            <p className="text-3xl font-medium tracking-tight text-zinc-900 dark:text-white">0%</p>
             <span className="text-xs font-semibold text-zinc-500">bajarildi</span>
           </div>
           <p className="text-xs font-bold text-zinc-700 dark:text-zinc-200 mt-0.5">This week&apos;s plan</p>
@@ -59,7 +59,7 @@ export default function StatsGrid() {
 
         <div>
           <div className="flex items-baseline gap-1.5">
-            <p className="text-3xl font-black tracking-tight text-zinc-900 dark:text-white">~505</p>
+            <p className="text-3xl font-medium tracking-tight text-zinc-900 dark:text-white">~505</p>
             <span className="text-xs font-bold text-zinc-500">/ 1600</span>
           </div>
           <p className="text-xs font-bold text-zinc-700 dark:text-zinc-200 mt-0.5">Predicted Score</p>
@@ -93,7 +93,7 @@ export default function StatsGrid() {
 
         <div>
           <div className="flex items-baseline gap-1.5">
-            <p className="text-3xl font-black tracking-tight text-zinc-900 dark:text-white">0</p>
+            <p className="text-3xl font-medium tracking-tight text-zinc-900 dark:text-white">0</p>
             <span className="text-xs font-semibold text-zinc-500">kun</span>
           </div>
           <p className="text-xs font-bold text-zinc-700 dark:text-zinc-200 mt-0.5">Day Streak</p>
@@ -131,7 +131,7 @@ export default function StatsGrid() {
 
         <div>
           <div className="flex items-baseline gap-1.5">
-            <p className="text-3xl font-black tracking-tight text-zinc-900 dark:text-white">0</p>
+            <p className="text-3xl font-medium tracking-tight text-zinc-900 dark:text-white">0</p>
             <span className="text-xs font-semibold text-zinc-500">savol</span>
           </div>
           <p className="text-xs font-bold text-zinc-700 dark:text-zinc-200 mt-0.5">Questions Today</p>
