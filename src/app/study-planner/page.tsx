@@ -543,11 +543,64 @@ export default function StudyPlannerPage() {
               </div>
             </div>
 
-            {/* "How It Works" Section Title */}
-            <div className="w-full max-w-2xl pt-10 pb-4 text-center">
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-950 font-dm-sans">
+            {/* "How It Works" Section (Matching User Image Exactly) */}
+            <div className="w-full max-w-3xl pt-12 pb-16 text-center">
+              <h2 className="text-2xl sm:text-[26px] font-bold tracking-tight text-zinc-950 font-dm-sans">
                 How It Works
               </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 pt-8 text-center">
+                {/* Column 1: Set Your Goals */}
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-[#cefbff] flex items-center justify-center shadow-2xs">
+                    <svg className="w-6 h-6 text-[#1cb0f6]" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zm-12-9h3v3H7zm5 0h3v3h-3zm5 0h3v3h-3zm-10 5h3v3H7zm5 0h3v3h-3zm5 0h3v3h-3z" />
+                    </svg>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-[17px] font-bold text-zinc-950 tracking-tight font-dm-sans">
+                      Set Your Goals
+                    </h3>
+                    <p className="text-xs sm:text-[13px] text-zinc-500 font-medium leading-relaxed max-w-[220px] mx-auto">
+                      Tell us your test date and target score, and we&apos;ll build a personalized day-by-day plan.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Column 2: Study Smarter */}
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-[#cefbff] flex items-center justify-center shadow-2xs">
+                    <svg className="w-6 h-6 text-[#1cb0f6]" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M11 3.5C9.6 3.3 8.2 4 7.5 5.2c-.9.1-1.8.6-2.4 1.3-1 1.2-1 2.9-.6 4.3-.9.8-1.4 2.1-1.2 3.4.2 1.6 1.2 3 2.6 3.4 0 .6.2 1.2.6 1.6.9 1.4 2.6 2.1 4.2 1.7.3 0 .6-.1.9-.2.2.5.5.9.8 1.2.8.7 1.9 1.1 3 1.1v-20c-1.4 0-2.8.5-4.4 1.7zm2 0c1.4-.2 2.8.5 3.5 1.7.9.1 1.8.6 2.4 1.3 1 1.2 1 2.9.6 4.3.9.8 1.4 2.1 1.2 3.4-.2 1.6-1.2 3-2.6 3.4 0 .6-.2 1.2-.6 1.6-.9 1.4-2.6 2.1-4.2 1.7-.3 0-.6-.1-.9-.2-.2.5-.5.9-.8 1.2-.8.7-1.9 1.1-3 1.1v-20c1.4 0 2.8.5 4.4 1.7z" />
+                    </svg>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-[17px] font-bold text-zinc-950 tracking-tight font-dm-sans">
+                      Study Smarter
+                    </h3>
+                    <p className="text-xs sm:text-[13px] text-zinc-500 font-medium leading-relaxed max-w-[220px] mx-auto">
+                      Follow daily sessions with questions, notes, and practice tailored to your weak areas.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Column 3: Track Your Growth */}
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-[#cefbff] flex items-center justify-center shadow-2xs">
+                    <svg className="w-6 h-6 text-[#1cb0f6]" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8v8h8c0 4.41-3.59 8-8 8z" />
+                    </svg>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-[17px] font-bold text-zinc-950 tracking-tight font-dm-sans">
+                      Track Your Growth
+                    </h3>
+                    <p className="text-xs sm:text-[13px] text-zinc-500 font-medium leading-relaxed max-w-[220px] mx-auto">
+                      See your progress across topics and adjust your plan as you improve.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </main>
         )}
