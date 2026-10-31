@@ -514,7 +514,7 @@ function SatOnboardingContent() {
                     setBestScore(clean);
                   }}
                   placeholder="Enter best score"
-                  className="w-full py-3.5 px-4 rounded-xl border-2 border-zinc-950 bg-white text-base sm:text-lg text-center font-medium text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#1cb0f6] transition-all"
+                  className="w-full h-16 sm:h-[72px] px-6 rounded-2xl border-2 border-zinc-950 bg-white text-3xl sm:text-4xl font-bold text-center text-zinc-950 tracking-tight placeholder:text-zinc-300 placeholder:font-bold placeholder:text-2xl sm:placeholder:text-3xl focus:outline-none focus:ring-4 focus:ring-[#1cb0f6]/20 transition-all font-dm-sans"
                 />
 
                 {/* "I don't have a score yet" button */}
@@ -524,18 +524,18 @@ function SatOnboardingContent() {
                     setBestScore("");
                     setCurrentStep(3);
                   }}
-                  className="w-full py-3 px-4 rounded-xl bg-[#f5f5f5] hover:bg-zinc-200/80 text-xs font-semibold text-zinc-600 transition-colors cursor-pointer text-center mt-2"
+                  className="w-full py-3.5 px-4 rounded-xl bg-[#f5f5f5] hover:bg-zinc-200/80 text-sm font-semibold text-zinc-700 transition-colors cursor-pointer text-center mt-3"
                 >
                   I don&apos;t have a score yet
                 </button>
               </div>
 
               {/* Navigation buttons: Previous & Continue */}
-              <div className="flex items-center justify-between pt-6">
+              <div className="flex items-center justify-between pt-8">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(1)}
-                  className="px-8 py-2.5 rounded-full bg-[#f5f5f5] hover:bg-zinc-200 text-zinc-700 text-xs font-semibold transition-all cursor-pointer"
+                  className="px-10 py-3 rounded-full bg-[#f5f5f5] hover:bg-zinc-200 text-zinc-800 text-sm font-semibold transition-all cursor-pointer"
                 >
                   Previous
                 </button>
@@ -543,7 +543,7 @@ function SatOnboardingContent() {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(3)}
-                  className="px-8 py-2.5 rounded-full bg-black hover:bg-zinc-800 text-white text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
+                  className="px-10 py-3 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-sm font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
                 >
                   Continue
                 </button>
@@ -647,11 +647,11 @@ function SatOnboardingContent() {
               </div>
 
               {/* Navigation buttons: Previous & Finish setup */}
-              <div className="flex items-center justify-between pt-4">
+              <div className="flex items-center justify-between pt-8">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="px-8 py-2.5 rounded-full bg-[#f5f5f5] hover:bg-zinc-200 text-zinc-700 text-xs font-semibold transition-all cursor-pointer"
+                  className="px-10 py-3 rounded-full bg-[#f5f5f5] hover:bg-zinc-200 text-zinc-800 text-sm font-semibold transition-all cursor-pointer"
                 >
                   Previous
                 </button>
@@ -659,7 +659,7 @@ function SatOnboardingContent() {
                 <button
                   type="button"
                   onClick={handleFinishSetup}
-                  className="px-8 py-2.5 rounded-full bg-black hover:bg-zinc-800 text-white text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
+                  className="px-10 py-3 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-sm font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
                 >
                   Finish setup
                 </button>
