@@ -22,7 +22,7 @@ import {
   ArrowUpCircle,
   PanelLeftClose,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "@/context/SidebarContext";
 
 // OnePrep Cloud Mascot SVG
@@ -60,9 +60,29 @@ function CloudMascot() {
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { isOpen, closeSidebar } = useSidebar();
-  const [selectedTrack, setSelectedTrack] = useState<"SAT" | "ACT" | "AP" | "College">("College");
+  
+  // Track selection state based on current pathname
+  const activeTrack: "SAT" | "ACT" | "AP" | "College" = pathname?.includes("/sat")
+    ? "SAT"
+    : pathname?.includes("/act")
+    ? "ACT"
+    : pathname?.includes("/ap")
+    ? "AP"
+    : "College";
+
+  const [selectedTrack, setSelectedTrack] = useState<"SAT" | "ACT" | "AP" | "College">(activeTrack);
   const [activeMenu, setActiveMenu] = useState<string>("Home");
+
+  const handleTrackClick = (track: "SAT" | "ACT" | "AP" | "College") => {
+    setSelectedTrack(track);
+    if (track === "SAT") {
+      router.push("/exam-board-onboarding/sat?returnTo=%2Fcollege-applications");
+    } else if (track === "College") {
+      router.push("/college-applications");
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -111,7 +131,7 @@ export default function Sidebar() {
                   <button
                     key={track}
                     type="button"
-                    onClick={() => setSelectedTrack(track)}
+                    onClick={() => handleTrackClick(track)}
                     className={`py-1 px-2.5 rounded-full transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
                       isActive
                         ? "bg-white text-[#0e4369] font-bold shadow-xs"
