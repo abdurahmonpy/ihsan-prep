@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
@@ -71,7 +71,7 @@ export default function Sidebar() {
 
   // Track selection state based on current pathname
   const activeTrack: "SAT" | "ACT" | "AP" | "College" =
-    pathname?.includes("/sat") || pathname === "/home"
+    pathname?.includes("/sat") || pathname === "/home" || pathname === "/study-planner"
       ? "SAT"
       : pathname?.includes("/act")
       ? "ACT"
@@ -80,7 +80,21 @@ export default function Sidebar() {
       : "College";
 
   const [selectedTrack, setSelectedTrack] = useState<"SAT" | "ACT" | "AP" | "College">(activeTrack);
-  const [activeMenu, setActiveMenu] = useState<string>("Home");
+  const [activeMenu, setActiveMenu] = useState<string>(
+    pathname === "/study-planner" ? "Study Planner" : "Home"
+  );
+
+  useEffect(() => {
+    if (pathname === "/study-planner") {
+      setSelectedTrack("SAT");
+      setActiveMenu("Study Planner");
+    } else if (pathname === "/home") {
+      setSelectedTrack("SAT");
+      setActiveMenu("Home");
+    } else if (pathname === "/college-applications" || pathname === "/dashboard") {
+      setSelectedTrack("College");
+    }
+  }, [pathname]);
 
   const handleTrackClick = (track: "SAT" | "ACT" | "AP" | "College") => {
     setSelectedTrack(track);
@@ -172,31 +186,39 @@ export default function Sidebar() {
                     href="/home"
                     onClick={() => setActiveMenu("Home")}
                     className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
-                      activeMenu === "Home"
+                      activeMenu === "Home" && pathname === "/home"
                         ? "bg-white text-[#0e4369] font-bold shadow-xs"
                         : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
                     }`}
                   >
-                    <Home className={`h-4 w-4 ${activeMenu === "Home" ? "fill-[#0e4369]" : ""}`} strokeWidth={2} />
+                    <Home className={`h-4 w-4 ${activeMenu === "Home" && pathname === "/home" ? "fill-[#0e4369]" : ""}`} strokeWidth={2} />
                     <span className="text-xs font-semibold">Home</span>
                   </Link>
 
                   <Link
                     href="#tutor"
                     onClick={() => setActiveMenu("Tutor")}
-                    className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors cursor-pointer"
+                    className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-colors cursor-pointer ${
+                      activeMenu === "Tutor"
+                        ? "bg-white text-[#0e4369] font-bold shadow-xs"
+                        : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
+                    }`}
                   >
                     <Bot className="h-4 w-4" strokeWidth={2} />
                     <span className="text-xs">Ask Preppy Tutor</span>
                   </Link>
 
                   <Link
-                    href="#study-planner"
+                    href="/study-planner"
                     onClick={() => setActiveMenu("Study Planner")}
-                    className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors cursor-pointer"
+                    className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
+                      activeMenu === "Study Planner" || pathname === "/study-planner"
+                        ? "bg-white text-[#0e4369] font-bold shadow-xs"
+                        : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
+                    }`}
                   >
-                    <Calendar className="h-4 w-4" strokeWidth={2} />
-                    <span className="text-xs">Study Planner</span>
+                    <Calendar className={`h-4 w-4 ${activeMenu === "Study Planner" || pathname === "/study-planner" ? "text-[#0e4369]" : ""}`} strokeWidth={2} />
+                    <span className="text-xs font-semibold">Study Planner</span>
                   </Link>
 
                   <Link

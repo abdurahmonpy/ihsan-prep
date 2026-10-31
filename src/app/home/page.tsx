@@ -277,12 +277,12 @@ export default function SatHomePage() {
               </div>
 
               <div className="pt-2">
-                <button
-                  type="button"
-                  className="rounded-full bg-[#1cb0f6] hover:bg-[#0ea5e9] text-white px-7 py-3 text-xs sm:text-sm font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
+                <Link
+                  href="/study-planner"
+                  className="inline-block rounded-full bg-[#1cb0f6] hover:bg-[#0ea5e9] text-white px-7 py-3 text-xs sm:text-sm font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
                 >
                   Create my study plan
-                </button>
+                </Link>
               </div>
             </div>
           </div>
