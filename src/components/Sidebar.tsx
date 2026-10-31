@@ -21,6 +21,12 @@ import {
   Search,
   ArrowUpCircle,
   PanelLeftClose,
+  BarChart3,
+  Bookmark,
+  BookOpen,
+  Calculator,
+  Layers,
+  Flame,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "@/context/SidebarContext";
@@ -62,15 +68,16 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { isOpen, closeSidebar } = useSidebar();
-  
+
   // Track selection state based on current pathname
-  const activeTrack: "SAT" | "ACT" | "AP" | "College" = pathname?.includes("/sat")
-    ? "SAT"
-    : pathname?.includes("/act")
-    ? "ACT"
-    : pathname?.includes("/ap")
-    ? "AP"
-    : "College";
+  const activeTrack: "SAT" | "ACT" | "AP" | "College" =
+    pathname?.includes("/sat") || pathname === "/home"
+      ? "SAT"
+      : pathname?.includes("/act")
+      ? "ACT"
+      : pathname?.includes("/ap")
+      ? "AP"
+      : "College";
 
   const [selectedTrack, setSelectedTrack] = useState<"SAT" | "ACT" | "AP" | "College">(activeTrack);
   const [activeMenu, setActiveMenu] = useState<string>("Home");
@@ -78,11 +85,13 @@ export default function Sidebar() {
   const handleTrackClick = (track: "SAT" | "ACT" | "AP" | "College") => {
     setSelectedTrack(track);
     if (track === "SAT") {
-      router.push("/exam-board-onboarding/sat?returnTo=%2Fcollege-applications");
+      router.push("/home");
     } else if (track === "College") {
       router.push("/college-applications");
     }
   };
+
+  const isSatTrack = selectedTrack === "SAT";
 
   return (
     <AnimatePresence>
@@ -96,7 +105,10 @@ export default function Sidebar() {
         >
           {/* Header Row: Logo + Search */}
           <div className="flex items-center justify-between px-4 pt-3.5 pb-2">
-            <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <Link
+              href={isSatTrack ? "/home" : "/dashboard"}
+              className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+            >
               <CloudMascot />
               <span className="text-lg font-bold tracking-tight text-white font-dm-sans">
                 OnePrep
@@ -122,7 +134,7 @@ export default function Sidebar() {
             </div>
           </div>
 
-          {/* Top Tabs: SAT | ACT | AP | College • */}
+          {/* Top Tabs: SAT | ACT | AP | College */}
           <div className="px-3 py-1.5">
             <div className="flex items-center justify-between gap-1 text-[11px] font-medium">
               {(["SAT", "ACT", "AP", "College"] as const).map((track) => {
@@ -139,7 +151,7 @@ export default function Sidebar() {
                     }`}
                   >
                     <span>{track}</span>
-                    {track === "College" && (
+                    {track === "College" && selectedTrack === "College" && (
                       <span className="w-1.5 h-1.5 rounded-full bg-[#0e4369] inline-block" />
                     )}
                   </button>
@@ -150,150 +162,272 @@ export default function Sidebar() {
 
           {/* Scrollable Navigation Area */}
           <nav className="flex-1 overflow-y-auto px-2.5 py-2 space-y-3.5 text-xs font-medium scrollbar-thin scrollbar-thumb-[#1a5f87] scrollbar-track-transparent">
-            {/* General Menu Items */}
-            <div className="space-y-0.5">
-              <Link
-                href="/dashboard"
-                onClick={() => setActiveMenu("Home")}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
-                  activeMenu === "Home"
-                    ? "bg-white text-[#0e4369] font-bold shadow-xs"
-                    : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
-                }`}
-              >
-                <Home className={`h-4 w-4 ${activeMenu === "Home" ? "fill-[#0e4369]" : ""}`} strokeWidth={2} />
-                <span className="text-xs font-semibold">Home</span>
-              </Link>
+            {/* ============================================================ */}
+            {/* SAT TRACK MENU ITEMS (Matching Image 4 & 5)                   */}
+            {/* ============================================================ */}
+            {isSatTrack ? (
+              <>
+                <div className="space-y-0.5">
+                  <Link
+                    href="/home"
+                    onClick={() => setActiveMenu("Home")}
+                    className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
+                      activeMenu === "Home"
+                        ? "bg-white text-[#0e4369] font-bold shadow-xs"
+                        : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
+                    }`}
+                  >
+                    <Home className={`h-4 w-4 ${activeMenu === "Home" ? "fill-[#0e4369]" : ""}`} strokeWidth={2} />
+                    <span className="text-xs font-semibold">Home</span>
+                  </Link>
 
-              <Link
-                href="#advisor"
-                onClick={() => setActiveMenu("Advisor")}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
-                  activeMenu === "Advisor"
-                    ? "bg-white text-[#0e4369] font-bold shadow-xs"
-                    : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
-                }`}
-              >
-                <Bot className="h-4 w-4" strokeWidth={2} />
-                <span className="text-xs">Ask Preppy Advisor</span>
-              </Link>
+                  <Link
+                    href="#tutor"
+                    onClick={() => setActiveMenu("Tutor")}
+                    className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors cursor-pointer"
+                  >
+                    <Bot className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Ask Preppy Tutor</span>
+                  </Link>
 
-              <Link
-                href="#planner"
-                onClick={() => setActiveMenu("Planner")}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
-                  activeMenu === "Planner"
-                    ? "bg-white text-[#0e4369] font-bold shadow-xs"
-                    : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
-                }`}
-              >
-                <Calendar className="h-4 w-4" strokeWidth={2} />
-                <span className="text-xs">Planner</span>
-              </Link>
-            </div>
+                  <Link
+                    href="#study-planner"
+                    onClick={() => setActiveMenu("Study Planner")}
+                    className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors cursor-pointer"
+                  >
+                    <Calendar className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Study Planner</span>
+                  </Link>
 
-            {/* MY APPLICATION Section */}
-            <div className="space-y-1">
-              <div className="px-3 py-1">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7eb4d6]">
-                  MY APPLICATION
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <Link
-                  href="#profile"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
-                >
-                  <User className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-xs">My Profile</span>
-                </Link>
+                  <Link
+                    href="#analytics"
+                    onClick={() => setActiveMenu("Analytics")}
+                    className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors cursor-pointer"
+                  >
+                    <BarChart3 className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Analytics</span>
+                  </Link>
 
-                <Link
-                  href="#chance-me"
-                  className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <Compass className="h-4 w-4" strokeWidth={2} />
-                    <span className="text-xs">Chance Me</span>
+                  <Link
+                    href="#saved-mistakes"
+                    onClick={() => setActiveMenu("Saved & Mistakes")}
+                    className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors cursor-pointer"
+                  >
+                    <Bookmark className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Saved &amp; Mistakes</span>
+                  </Link>
+                </div>
+
+                {/* MASTERCLASS Section */}
+                <div className="space-y-1">
+                  <div className="px-3 py-1 flex items-center justify-between">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7eb4d6]">
+                      MASTERCLASS
+                    </span>
+                    <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
+                      New
+                    </span>
                   </div>
-                  <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
-                    New
-                  </span>
-                </Link>
+                  <div className="space-y-0.5">
+                    <Link
+                      href="#reading-writing"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <BookOpen className="h-4 w-4" strokeWidth={2} />
+                      <span className="text-xs">Reading &amp; Writing</span>
+                    </Link>
 
-                <Link
-                  href="#essay-grader"
-                  className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <FileText className="h-4 w-4" strokeWidth={2} />
-                    <span className="text-xs">Essay Grader</span>
+                    <Link
+                      href="#math-desmos"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <Calculator className="h-4 w-4" strokeWidth={2} />
+                      <span className="text-xs">Math &amp; Desmos</span>
+                    </Link>
                   </div>
-                  <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
-                    New
-                  </span>
-                </Link>
+                </div>
 
-                <Link
-                  href="#final-read"
-                  className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <ShieldCheck className="h-4 w-4" strokeWidth={2} />
-                    <span className="text-xs">Final Read</span>
+                {/* PRACTICE Section */}
+                <div className="space-y-1">
+                  <div className="px-3 py-1">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7eb4d6]">
+                      PRACTICE
+                    </span>
                   </div>
-                  <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
-                    New
-                  </span>
-                </Link>
-              </div>
-            </div>
+                  <div className="space-y-0.5">
+                    <Link
+                      href="#question-bank"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <Layers className="h-4 w-4" strokeWidth={2} />
+                      <span className="text-xs">Question Bank</span>
+                    </Link>
 
-            {/* DISCOVER Section */}
-            <div className="space-y-1">
-              <div className="px-3 py-1">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7eb4d6]">
-                  DISCOVER
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <Link
-                  href="#colleges"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
-                >
-                  <Landmark className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-xs">Colleges</span>
-                </Link>
+                    <Link
+                      href="#question-rush"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <Flame className="h-4 w-4 text-[#fbbf24]" strokeWidth={2} />
+                      <span className="text-xs">Question Rush</span>
+                    </Link>
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* ============================================================ */
+              /* COLLEGE TRACK MENU ITEMS                                     */
+              /* ============================================================ */
+              <>
+                <div className="space-y-0.5">
+                  <Link
+                    href="/college-applications"
+                    onClick={() => setActiveMenu("Home")}
+                    className={`flex items-center gap-3 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
+                      activeMenu === "Home"
+                        ? "bg-white text-[#0e4369] font-bold shadow-xs"
+                        : "text-[#d2e4ee] hover:bg-[#16537f] hover:text-white"
+                    }`}
+                  >
+                    <Home className={`h-4 w-4 ${activeMenu === "Home" ? "fill-[#0e4369]" : ""}`} strokeWidth={2} />
+                    <span className="text-xs font-semibold">Home</span>
+                  </Link>
 
-                <Link
-                  href="#profiles"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
-                >
-                  <Users className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-xs">Profiles</span>
-                </Link>
+                  <Link
+                    href="#advisor"
+                    onClick={() => setActiveMenu("Advisor")}
+                    className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors cursor-pointer"
+                  >
+                    <Bot className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Ask Preppy Advisor</span>
+                  </Link>
 
-                <Link
-                  href="#essays"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
-                >
-                  <FileText className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-xs">Essays</span>
-                </Link>
+                  <Link
+                    href="#planner"
+                    onClick={() => setActiveMenu("Planner")}
+                    className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors cursor-pointer"
+                  >
+                    <Calendar className="h-4 w-4" strokeWidth={2} />
+                    <span className="text-xs">Planner</span>
+                  </Link>
+                </div>
 
-                <Link
-                  href="#scholarships"
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
-                >
-                  <GraduationCap className="h-4 w-4" strokeWidth={2} />
-                  <span className="text-xs">Scholarships</span>
-                </Link>
-              </div>
-            </div>
+                {/* MY APPLICATION Section */}
+                <div className="space-y-1">
+                  <div className="px-3 py-1">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7eb4d6]">
+                      MY APPLICATION
+                    </span>
+                  </div>
+                  <div className="space-y-0.5">
+                    <Link
+                      href="#profile"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <User className="h-4 w-4" strokeWidth={2} />
+                      <span className="text-xs">My Profile</span>
+                    </Link>
+
+                    <Link
+                      href="#chance-me"
+                      className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Compass className="h-4 w-4" strokeWidth={2} />
+                        <span className="text-xs">Chance Me</span>
+                      </div>
+                      <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
+                        New
+                      </span>
+                    </Link>
+
+                    <Link
+                      href="#essay-grader"
+                      className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-4 w-4" strokeWidth={2} />
+                        <span className="text-xs">Essay Grader</span>
+                      </div>
+                      <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
+                        New
+                      </span>
+                    </Link>
+
+                    <Link
+                      href="#final-read"
+                      className="flex items-center justify-between rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <ShieldCheck className="h-4 w-4" strokeWidth={2} />
+                        <span className="text-xs">Final Read</span>
+                      </div>
+                      <span className="rounded-md bg-[#0ea5e9] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-2xs">
+                        New
+                      </span>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* DISCOVER Section */}
+                <div className="space-y-1">
+                  <div className="px-3 py-1">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7eb4d6]">
+                      DISCOVER
+                    </span>
+                  </div>
+                  <div className="space-y-0.5">
+                    <Link
+                      href="#colleges"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <Landmark className="h-4 w-4" strokeWidth={2} />
+                      <span className="text-xs">Colleges</span>
+                    </Link>
+
+                    <Link
+                      href="#profiles"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <Users className="h-4 w-4" strokeWidth={2} />
+                      <span className="text-xs">Profiles</span>
+                    </Link>
+
+                    <Link
+                      href="#essays"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <FileText className="h-4 w-4" strokeWidth={2} />
+                      <span className="text-xs">Essays</span>
+                    </Link>
+
+                    <Link
+                      href="#scholarships"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-1.5 text-[#d2e4ee] hover:bg-[#16537f] hover:text-white transition-colors"
+                    >
+                      <GraduationCap className="h-4 w-4" strokeWidth={2} />
+                      <span className="text-xs">Scholarships</span>
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
           </nav>
 
           {/* Footer Actions & Profile */}
           <div className="px-3 pt-2 pb-3 border-t border-[#1a5f87]/60 space-y-1.5 bg-[#0b3756]">
+            {/* Getting started 0/6 (For SAT track) */}
+            {isSatTrack && (
+              <div className="flex items-center justify-between px-2.5 py-1.5 text-xs text-[#d2e4ee] hover:bg-[#16537f] rounded-xl transition-colors cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full border-2 border-dashed border-[#7eaec6] flex items-center justify-center text-[8px] font-bold">
+                    0
+                  </div>
+                  <span className="text-xs font-semibold">Getting started</span>
+                </div>
+                <span className="text-[11px] font-bold text-[#7eaec6]">0/6</span>
+              </div>
+            )}
+
             {/* Upgrade with 40% Off */}
             <Link
               href="/onboarding"

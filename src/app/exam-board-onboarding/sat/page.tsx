@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import Link from "next/link";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Calendar as CalendarIcon, Check } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Calendar as CalendarIcon,
+  Check,
+} from "lucide-react";
 
 // OnePrep Cloud Mascot SVG
 function CloudMascot({ size = 32 }: { size?: number }) {
@@ -61,21 +66,59 @@ const satDates = [
   { id: "jun_3_2028", label: "June 3, 2028*" },
 ];
 
+const months = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
+const years = [2026, 2027, 2028, 2029, 2030];
+
+// Stair-step score checkpoints for Step 3
+const scoreCheckpoints = [
+  400, 500, 600, 700, 800, 900, 1000, 1100,
+  1200, 1280, 1350, 1420, 1500, 1550, 1580, 1600
+];
+
 function SatOnboardingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo") || "/college-applications";
+  const returnTo = searchParams.get("returnTo") || "/home";
 
-  // Step state (1 of 3, 2 of 3, 3 of 3)
+  // Step state: 1, 2, or 3
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  // Selected dates (multi-select)
+  // STEP 1 STATE: Selected pre-set dates + Custom date
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [customDate, setCustomDate] = useState<string>("");
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
-  // Step 2 & 3 state
-  const [targetScore, setTargetScore] = useState<string>("1500+");
-  const [practiceFrequency, setPracticeFrequency] = useState<string>("30 mins / day");
+  // Calendar popover internal state
+  const [calMonth, setCalMonth] = useState<number>(9); // 0-indexed: 9 = October
+  const [calYear, setCalYear] = useState<number>(2026);
+  const [showMonthDropdown, setShowMonthDropdown] = useState<boolean>(false);
+  const [showYearDropdown, setShowYearDropdown] = useState<boolean>(false);
+
+  // STEP 2 STATE: Best score to date
+  const [bestScore, setBestScore] = useState<string>("");
+
+  // STEP 3 STATE: Goal score
+  const [goalScoreIndex, setGoalScoreIndex] = useState<number>(8); // index 8 = 1200
+  const currentGoalScore = scoreCheckpoints[goalScoreIndex];
+
+  // Close calendar popover on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target as Node)
+      ) {
+        setShowCalendar(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const toggleDate = (dateId: string) => {
     if (selectedDates.includes(dateId)) {
@@ -85,36 +128,63 @@ function SatOnboardingContent() {
     }
   };
 
-  const hasSelection = selectedDates.length > 0 || customDate.trim() !== "";
+  const hasStep1Selection = selectedDates.length > 0 || customDate.trim() !== "";
 
-  const handleContinue = () => {
-    if (currentStep === 1) {
-      if (!hasSelection) return;
-      setCurrentStep(2);
-    } else if (currentStep === 2) {
-      setCurrentStep(3);
+  // Calendar logic to generate 42 slots (6 weeks)
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const firstDayOfWeek = new Date(calYear, calMonth, 1).getDay(); // 0 = Sun
+  const daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
+
+  const handleDaySelect = (day: number) => {
+    const monthName = new Date(calYear, calMonth, 1).toLocaleString("en-US", {
+      month: "long",
+    });
+    setCustomDate(`${monthName} ${day}, ${calYear}`);
+    setShowCalendar(false);
+  };
+
+  const handlePrevMonth = () => {
+    if (calMonth === 0) {
+      setCalMonth(11);
+      setCalYear((prev) => prev - 1);
     } else {
-      // Completed, return to previous page
-      router.push(returnTo);
+      setCalMonth((prev) => prev - 1);
     }
   };
 
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+  const handleNextMonth = () => {
+    if (calMonth === 11) {
+      setCalMonth(0);
+      setCalYear((prev) => prev + 1);
     } else {
-      router.push(returnTo);
+      setCalMonth((prev) => prev + 1);
     }
+  };
+
+  // Step Navigation
+  const handleGoBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1);
+    } else {
+      router.push("/college-applications");
+    }
+  };
+
+  const handleFinishSetup = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("sat_goal_score", String(currentGoalScore));
+    }
+    router.push("/home");
   };
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-dm-sans flex flex-col justify-between selection:bg-[#38bdf8] selection:text-white">
       {/* ---------------- TOP HEADER BAR ---------------- */}
-      <header className="w-full px-4 sm:px-8 pt-5 pb-3 flex items-center justify-between border-b border-zinc-100">
+      <header className="w-full px-4 sm:px-8 pt-5 pb-3 flex items-center justify-between border-b border-zinc-100 select-none">
         {/* Go back */}
         <button
           type="button"
-          onClick={handleBack}
+          onClick={handleGoBack}
           className="flex items-center gap-1 text-xs sm:text-sm font-medium text-zinc-600 hover:text-black transition-colors cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4 stroke-[2.2]" />
@@ -129,7 +199,7 @@ function SatOnboardingContent() {
           </span>
         </div>
 
-        {/* Step Indicator: 1 of 3 */}
+        {/* Step Indicator: 1 of 3, 2 of 3, 3 of 3 */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5">
             <span
@@ -158,7 +228,7 @@ function SatOnboardingContent() {
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-8 max-w-xl w-full mx-auto">
         <AnimatePresence mode="wait">
           {/* ============================================================ */}
-          {/* STEP 1: WHEN ARE YOU TAKING THE SAT?                         */}
+          {/* STEP 1: WHEN ARE YOU TAKING THE SAT? (With Custom Calendar)   */}
           {/* ============================================================ */}
           {currentStep === 1 && (
             <motion.div
@@ -221,24 +291,173 @@ function SatOnboardingContent() {
                 </div>
               </div>
 
-              {/* Custom Date Input */}
-              <div className="w-full text-left space-y-1.5">
+              {/* Custom Date Input with Interactive Calendar Popover (Image 1) */}
+              <div className="w-full text-left space-y-1.5 relative" ref={calendarRef}>
                 <label className="block text-xs font-semibold text-zinc-800">
                   Custom date
                 </label>
                 <div className="relative">
-                  <input
-                    type="date"
-                    value={customDate}
-                    onChange={(e) => setCustomDate(e.target.value)}
-                    placeholder="Choose a date"
-                    className="w-full py-3 px-4 rounded-xl border-2 border-transparent bg-[#f5f5f5] hover:bg-zinc-200/70 focus:bg-white focus:border-[#1cb0f6] focus:ring-2 focus:ring-[#1cb0f6]/30 text-xs sm:text-sm font-medium text-zinc-800 focus:outline-none transition-all cursor-pointer"
-                  />
-                  {!customDate && (
-                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-400">
-                      <CalendarIcon className="w-4 h-4" />
-                    </div>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowCalendar(!showCalendar)}
+                    className="w-full py-3 px-4 rounded-xl border border-transparent bg-[#f5f5f5] hover:bg-zinc-200/70 text-xs sm:text-sm font-medium text-zinc-800 text-left flex items-center justify-between transition-all cursor-pointer shadow-2xs"
+                  >
+                    <span className={customDate ? "text-zinc-900 font-semibold" : "text-zinc-500"}>
+                      {customDate || "Choose a date"}
+                    </span>
+                    <CalendarIcon className="w-4 h-4 text-zinc-400" />
+                  </button>
+
+                  {/* Calendar Popover (Matching Image 1) */}
+                  <AnimatePresence>
+                    {showCalendar && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: -8 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -8 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute bottom-full left-0 mb-2 z-50 w-[290px] rounded-2xl border border-zinc-200/90 bg-white p-3.5 shadow-2xl"
+                      >
+                        {/* Header: Prev, Month Select, Year Select, Next */}
+                        <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
+                          <button
+                            type="button"
+                            onClick={handlePrevMonth}
+                            className="p-1 rounded-lg hover:bg-zinc-100 text-zinc-600 transition-colors cursor-pointer"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+
+                          <div className="flex items-center gap-1.5">
+                            {/* Month Dropdown Button */}
+                            <div className="relative">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setShowMonthDropdown(!showMonthDropdown);
+                                  setShowYearDropdown(false);
+                                }}
+                                className="px-2.5 py-1 rounded-lg border border-zinc-200 bg-white text-xs font-semibold text-zinc-800 flex items-center gap-1 hover:bg-zinc-50 cursor-pointer"
+                              >
+                                <span>{months[calMonth]}</span>
+                                <ChevronDown className="w-3 h-3 text-zinc-400" />
+                              </button>
+                              {showMonthDropdown && (
+                                <div className="absolute top-full left-0 mt-1 z-30 max-h-36 w-24 overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-lg p-1 text-xs">
+                                  {months.map((m, idx) => (
+                                    <button
+                                      key={m}
+                                      type="button"
+                                      onClick={() => {
+                                        setCalMonth(idx);
+                                        setShowMonthDropdown(false);
+                                      }}
+                                      className={`w-full text-left px-2 py-1 rounded-md transition-colors ${
+                                        calMonth === idx
+                                          ? "bg-[#cefbff] text-[#0284c7] font-bold"
+                                          : "hover:bg-zinc-100 text-zinc-700"
+                                      }`}
+                                    >
+                                      {m}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Year Dropdown Button */}
+                            <div className="relative">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setShowYearDropdown(!showYearDropdown);
+                                  setShowMonthDropdown(false);
+                                }}
+                                className="px-2.5 py-1 rounded-lg border border-zinc-200 bg-white text-xs font-semibold text-zinc-800 flex items-center gap-1 hover:bg-zinc-50 cursor-pointer"
+                              >
+                                <span>{calYear}</span>
+                                <ChevronDown className="w-3 h-3 text-zinc-400" />
+                              </button>
+                              {showYearDropdown && (
+                                <div className="absolute top-full left-0 mt-1 z-30 max-h-36 w-24 overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-lg p-1 text-xs">
+                                  {years.map((y) => (
+                                    <button
+                                      key={y}
+                                      type="button"
+                                      onClick={() => {
+                                        setCalYear(y);
+                                        setShowYearDropdown(false);
+                                      }}
+                                      className={`w-full text-left px-2 py-1 rounded-md transition-colors ${
+                                        calYear === y
+                                          ? "bg-[#cefbff] text-[#0284c7] font-bold"
+                                          : "hover:bg-zinc-100 text-zinc-700"
+                                      }`}
+                                    >
+                                      {y}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={handleNextMonth}
+                            className="p-1 rounded-lg hover:bg-zinc-100 text-zinc-600 transition-colors cursor-pointer"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+
+                        {/* Weekday Labels (Su Mo Tu We Th Fr Sa) */}
+                        <div className="grid grid-cols-7 gap-1 pt-2 text-center">
+                          {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+                            <span key={day} className="text-[11px] font-semibold text-zinc-400 py-0.5">
+                              {day}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Calendar Days Grid */}
+                        <div className="grid grid-cols-7 gap-1 pt-1 text-center">
+                          {/* Previous Month Padding Days */}
+                          {Array.from({ length: firstDayOfWeek }).map((_, i) => {
+                            const prevDay = daysInPrevMonth - firstDayOfWeek + i + 1;
+                            return (
+                              <span
+                                key={`prev-${i}`}
+                                className="h-8 flex items-center justify-center text-xs text-zinc-300 select-none"
+                              >
+                                {prevDay}
+                              </span>
+                            );
+                          })}
+
+                          {/* Current Month Days */}
+                          {Array.from({ length: daysInMonth }).map((_, i) => {
+                            const day = i + 1;
+                            const isOct31 = day === 31 && calMonth === 9 && calYear === 2026;
+                            return (
+                              <button
+                                key={`day-${day}`}
+                                type="button"
+                                onClick={() => handleDaySelect(day)}
+                                className={`h-8 w-8 mx-auto rounded-xl flex items-center justify-center text-xs font-medium transition-colors cursor-pointer ${
+                                  isOct31
+                                    ? "bg-[#f4f4f5] text-zinc-900 font-bold border border-zinc-200"
+                                    : "hover:bg-[#cefbff] hover:text-[#0284c7] text-zinc-700"
+                                }`}
+                              >
+                                {day}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
@@ -246,10 +465,10 @@ function SatOnboardingContent() {
               <div className="w-full pt-3">
                 <button
                   type="button"
-                  disabled={!hasSelection}
-                  onClick={handleContinue}
+                  disabled={!hasStep1Selection}
+                  onClick={() => setCurrentStep(2)}
                   className={`w-full py-3.5 rounded-full text-sm font-medium transition-all shadow-xs ${
-                    hasSelection
+                    hasStep1Selection
                       ? "bg-black hover:bg-zinc-800 text-white cursor-pointer active:scale-[0.99]"
                       : "bg-[#8b8b8b] text-white cursor-not-allowed opacity-90"
                   }`}
@@ -261,7 +480,7 @@ function SatOnboardingContent() {
           )}
 
           {/* ============================================================ */}
-          {/* STEP 2: WHAT IS YOUR TARGET SCORE?                           */}
+          {/* STEP 2: ENTER YOUR BEST SAT SCORE TO DATE (Matching Image 2)  */}
           {/* ============================================================ */}
           {currentStep === 2 && (
             <motion.div
@@ -270,65 +489,61 @@ function SatOnboardingContent() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.28, ease: "easeOut" }}
-              className="w-full max-w-md space-y-5 text-center"
+              className="w-full max-w-md space-y-6 text-center"
             >
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <h1 className="text-2xl sm:text-[28px] font-bold tracking-tight text-zinc-950 font-dm-sans leading-tight">
-                  What is your target score?
+                  Enter your best SAT score to date
                 </h1>
-                <p className="text-xs sm:text-sm text-zinc-500 font-medium">
-                  We&apos;ll build your study plan around your score goal.
+                <p className="text-xs sm:text-sm text-zinc-500 font-medium max-w-sm mx-auto">
+                  Official scores and full practice tests both count. You can skip this for now.
                 </p>
               </div>
 
-              <div className="space-y-2.5 pt-2">
-                {[
-                  { range: "1500–1600", desc: "Top 1% — Ivy League & elite colleges" },
-                  { range: "1400–1490", desc: "Top 5% — Highly competitive schools" },
-                  { range: "1300–1390", desc: "Top 15% — Strong universities & merit aid" },
-                  { range: "1200–1290", desc: "Solid score for nationwide admissions" },
-                ].map((item) => {
-                  const isSelected = targetScore === item.range;
-                  return (
-                    <button
-                      key={item.range}
-                      type="button"
-                      onClick={() => setTargetScore(item.range)}
-                      className={`w-full p-4 rounded-2xl text-left border-2 transition-all cursor-pointer flex items-center justify-between ${
-                        isSelected
-                          ? "border-[#1cb0f6] bg-[#cefbff] shadow-xs"
-                          : "border-transparent bg-[#f5f5f5] hover:bg-zinc-200/70"
-                      }`}
-                    >
-                      <div className="space-y-0.5">
-                        <span
-                          className={`text-sm font-bold block ${
-                            isSelected ? "text-[#0284c7]" : "text-zinc-900"
-                          }`}
-                        >
-                          {item.range}
-                        </span>
-                        <span className="text-xs text-zinc-500">{item.desc}</span>
-                      </div>
-                      <div
-                        className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center shrink-0 ${
-                          isSelected
-                            ? "border-[#1cb0f6] bg-[#1cb0f6] text-white"
-                            : "border-zinc-300 bg-white"
-                        }`}
-                      >
-                        {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+              {/* Score Input Box */}
+              <div className="space-y-2 pt-2 text-left">
+                <label className="block text-xs font-semibold text-zinc-800">
+                  Total score
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={bestScore}
+                  onChange={(e) => {
+                    const clean = e.target.value.replace(/\D/g, "").slice(0, 4);
+                    setBestScore(clean);
+                  }}
+                  placeholder="Enter best score"
+                  className="w-full py-3.5 px-4 rounded-xl border-2 border-zinc-950 bg-white text-base sm:text-lg text-center font-medium text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#1cb0f6] transition-all"
+                />
 
-              <div className="w-full pt-3">
+                {/* "I don't have a score yet" button */}
                 <button
                   type="button"
-                  onClick={handleContinue}
-                  className="w-full py-3.5 rounded-full bg-black hover:bg-zinc-800 text-white font-medium text-sm transition-all shadow-xs cursor-pointer active:scale-[0.99]"
+                  onClick={() => {
+                    setBestScore("");
+                    setCurrentStep(3);
+                  }}
+                  className="w-full py-3 px-4 rounded-xl bg-[#f5f5f5] hover:bg-zinc-200/80 text-xs font-semibold text-zinc-600 transition-colors cursor-pointer text-center mt-2"
+                >
+                  I don&apos;t have a score yet
+                </button>
+              </div>
+
+              {/* Navigation buttons: Previous & Continue */}
+              <div className="flex items-center justify-between pt-6">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(1)}
+                  className="px-8 py-2.5 rounded-full bg-[#f5f5f5] hover:bg-zinc-200 text-zinc-700 text-xs font-semibold transition-all cursor-pointer"
+                >
+                  Previous
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(3)}
+                  className="px-8 py-2.5 rounded-full bg-black hover:bg-zinc-800 text-white text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
                 >
                   Continue
                 </button>
@@ -337,7 +552,7 @@ function SatOnboardingContent() {
           )}
 
           {/* ============================================================ */}
-          {/* STEP 3: PRACTICE SCHEDULE & FINALIZE                         */}
+          {/* STEP 3: WHAT'S YOUR SAT GOAL SCORE? (Matching Image 3)        */}
           {/* ============================================================ */}
           {currentStep === 3 && (
             <motion.div
@@ -346,67 +561,107 @@ function SatOnboardingContent() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.28, ease: "easeOut" }}
-              className="w-full max-w-md space-y-5 text-center"
+              className="w-full max-w-md space-y-6 text-center select-none"
             >
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <h1 className="text-2xl sm:text-[28px] font-bold tracking-tight text-zinc-950 font-dm-sans leading-tight">
-                  How often do you want to practice?
+                  What&apos;s your SAT goal score?
                 </h1>
                 <p className="text-xs sm:text-sm text-zinc-500 font-medium">
-                  Consistency is the number one driver of SAT score improvement.
+                  An estimate works great if you&apos;re not sure yet.
                 </p>
               </div>
 
-              <div className="space-y-2.5 pt-2">
-                {[
-                  { title: "15 mins / day", note: "Casual pace (5–7 questions daily)" },
-                  { title: "30 mins / day", note: "Recommended (15 questions + review)" },
-                  { title: "45 mins / day", note: "Intensive (Practice test sections)" },
-                  { title: "Weekends only", note: "2–3 hours on Saturday or Sunday" },
-                ].map((item) => {
-                  const isSelected = practiceFrequency === item.title;
-                  return (
-                    <button
-                      key={item.title}
-                      type="button"
-                      onClick={() => setPracticeFrequency(item.title)}
-                      className={`w-full p-4 rounded-2xl text-left border-2 transition-all cursor-pointer flex items-center justify-between ${
-                        isSelected
-                          ? "border-[#1cb0f6] bg-[#cefbff] shadow-xs"
-                          : "border-transparent bg-[#f5f5f5] hover:bg-zinc-200/70"
-                      }`}
-                    >
-                      <div className="space-y-0.5">
-                        <span
-                          className={`text-sm font-bold block ${
-                            isSelected ? "text-[#0284c7]" : "text-zinc-900"
-                          }`}
-                        >
-                          {item.title}
-                        </span>
-                        <span className="text-xs text-zinc-500">{item.note}</span>
-                      </div>
+              {/* Interactive Ascending Bar Chart Selector */}
+              <div className="pt-4 pb-2">
+                <div className="flex items-end justify-center gap-1.5 h-32 px-2">
+                  {scoreCheckpoints.map((score, idx) => {
+                    const isPassed = idx < goalScoreIndex;
+                    const isFocal = idx === goalScoreIndex;
+                    const heightPercent = 22 + (idx / (scoreCheckpoints.length - 1)) * 78;
+
+                    return (
                       <div
-                        className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center shrink-0 ${
-                          isSelected
-                            ? "border-[#1cb0f6] bg-[#1cb0f6] text-white"
-                            : "border-zinc-300 bg-white"
-                        }`}
+                        key={score}
+                        onClick={() => setGoalScoreIndex(idx)}
+                        className="flex-1 flex flex-col items-center justify-end h-full cursor-pointer group"
                       >
-                        {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                        <div
+                          style={{ height: `${heightPercent}%` }}
+                          className={`w-full rounded-t-sm transition-all duration-200 ${
+                            isFocal
+                              ? "bg-[#135073] shadow-md ring-2 ring-[#0ea5e9]/40 scale-y-[1.02]"
+                              : isPassed
+                              ? "bg-[#1cb0f6] group-hover:bg-[#0ea5e9]"
+                              : "border-2 border-dashed border-zinc-200 bg-transparent group-hover:border-zinc-400"
+                          }`}
+                        />
                       </div>
-                    </button>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+
+                {/* Left & Right arrow controls under focal bar */}
+                <div className="flex items-center justify-center gap-4 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setGoalScoreIndex((prev) => Math.max(0, prev - 1))}
+                    disabled={goalScoreIndex <= 0}
+                    className="p-1 rounded-full text-zinc-600 hover:text-black hover:bg-zinc-100 disabled:opacity-30 cursor-pointer"
+                  >
+                    ◀
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setGoalScoreIndex((prev) => Math.min(scoreCheckpoints.length - 1, prev + 1))
+                    }
+                    disabled={goalScoreIndex >= scoreCheckpoints.length - 1}
+                    className="p-1 rounded-full text-zinc-600 hover:text-black hover:bg-zinc-100 disabled:opacity-30 cursor-pointer"
+                  >
+                    ▶
+                  </button>
+                </div>
+
+                {/* Min 400 and Max 1600 labels */}
+                <div className="flex items-center justify-between text-left text-xs font-bold text-zinc-900 pt-1">
+                  <div>
+                    <span className="block text-[10px] text-zinc-400 uppercase font-semibold">MIN</span>
+                    <span>400</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="block text-[10px] text-zinc-400 uppercase font-semibold">MAX</span>
+                    <span>1600</span>
+                  </div>
+                </div>
+
+                {/* YOUR GOAL Display Box */}
+                <div className="pt-6 space-y-1.5">
+                  <span className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
+                    YOUR GOAL
+                  </span>
+                  <div className="w-full py-4 rounded-2xl bg-[#f5f5f5] text-3xl font-extrabold text-zinc-950 font-dm-sans shadow-2xs">
+                    {currentGoalScore}
+                  </div>
+                </div>
               </div>
 
-              <div className="w-full pt-3">
+              {/* Navigation buttons: Previous & Finish setup */}
+              <div className="flex items-center justify-between pt-4">
                 <button
                   type="button"
-                  onClick={handleContinue}
-                  className="w-full py-3.5 rounded-full bg-black hover:bg-zinc-800 text-white font-medium text-sm transition-all shadow-xs cursor-pointer active:scale-[0.99]"
+                  onClick={() => setCurrentStep(2)}
+                  className="px-8 py-2.5 rounded-full bg-[#f5f5f5] hover:bg-zinc-200 text-zinc-700 text-xs font-semibold transition-all cursor-pointer"
                 >
-                  Save and go to College Applications
+                  Previous
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleFinishSetup}
+                  className="px-8 py-2.5 rounded-full bg-black hover:bg-zinc-800 text-white text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
+                >
+                  Finish setup
                 </button>
               </div>
             </motion.div>
